@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { ServerModule } from '@source/modules/server/server.module';
+import { ServerModule } from './modules/server/server.module';
 import * as cors from 'cors'
 
 async function bootstrap() {

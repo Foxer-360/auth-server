@@ -10,18 +10,25 @@
   "scripts": {
     "build": "npx tsc --build tsconfig.json",
     "clean": "rm -r build",
-    "prod": "node build/index.js",
-    "start": "nodemon"
+    "deploy": "npx prisma deploy",
+    "prod": "npx node build/index.js",
+    "start": "npx nodemon"
   },
   "dependencies": {
     "@nestjs/common": "^5.7.3",
     "@nestjs/core": "^5.7.3",
     "cors": "^2.8.5",
+    "graphql": "^14.1.1",
+    "graphql-import": "^0.7.1",
+    "graphql-middleware": "^3.0.2",
+    "prisma": "^1.27.1",
+    "prisma-binding": "^2.3.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.4.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.4",
+    "@types/graphql": "^14.0.7",
     "@types/node": "^11.9.5",
     "eslint": "^5.14.1",
     "nodemon": "^1.18.10",
