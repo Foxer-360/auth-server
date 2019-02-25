@@ -1,0 +1,25 @@
+{
+  "name": "@foxer360/auth-server",
+  "version": "0.1.0",
+  "description": "Authorization server for the Foxer360 system.",
+  "main": "src/index.ts",
+  "repository": "git@github.com:Foxer-360/auth-server.git",
+  "author": "Filip Suchý <nevim42@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "npx tsc --build tsconfig.json",
+    "clean": "rm -r build",
+    "prod": "node build/index.js",
+    "start": "nodemon"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^5.14.1",
+    "nodemon": "^1.18.10",
+    "ts-node": "^8.0.2",
+    "tslint": "^5.13.0",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.3.3333"
+  }
+}
