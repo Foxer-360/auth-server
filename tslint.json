@@ -8,7 +8,7 @@
       "build/**/*",
       "config/**/*.js",
       "coverage/lcov-report/*.js",
-      "node_modules/**/*.ts"
+      "node_modules/**/*"
     ]
   }
 }

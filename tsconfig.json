@@ -32,6 +32,8 @@
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
     "strict": true,
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
     "paths": {
       "@source/*": ["./src/*"]
     },
@@ -40,8 +42,8 @@
     ]
   },
   "exclude": [
-    "build",
-    "node_module",
+    "build/**/*",
+    "node_module/**/*",
     "config",
     "scripts"
   ]
