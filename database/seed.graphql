@@ -1,0 +1,44 @@
+# Define all actions which can be managed in roles
+mutation defineActions {
+  create_project: createAction(
+    data: {
+      name: "create_project",
+      description: "Create new project."
+    }
+  ) { id }
+
+  edit_project: createAction(
+    data: {
+      name: "edit_project",
+      description: "Change properties of project, like name"
+    }
+  ) { id }
+
+  delete_project: createAction(
+    data: {
+      name: "delete_project",
+      description: "Delete whole project"
+    }
+  ) { id }
+
+  create_website: createAction(
+    data: {
+      name: "create_website",
+      description: "Create new website"
+    }
+  ) { id }
+
+  edit_website: createAction(
+    data: {
+      name: "edit_website",
+      description: "Change properties of website, like name"
+    }
+  ) { id }
+
+  delete_website: createAction(
+    data: {
+      name: "delete_website",
+      description: "Delete whole website"
+    }
+  ) { id }
+}

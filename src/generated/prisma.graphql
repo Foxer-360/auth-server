@@ -1,13 +1,1033 @@
 # source: http://localhost:4467
-# timestamp: Mon Feb 25 2019 13:04:48 GMT+0100 (Central European Standard Time)
+# timestamp: Wed Feb 27 2019 10:23:14 GMT+0100 (Central European Standard Time)
+
+type Action implements Node {
+  id: ID!
+  name: String!
+  description: String
+}
+
+"""A connection to a list of items."""
+type ActionConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ActionEdge]!
+  aggregate: AggregateAction!
+}
+
+input ActionCreateInput {
+  name: String!
+  description: String
+}
+
+input ActionCreateManyInput {
+  create: [ActionCreateInput!]
+  connect: [ActionWhereUniqueInput!]
+}
+
+"""An edge in a connection."""
+type ActionEdge {
+  """The item at the end of the edge."""
+  node: Action!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum ActionOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  description_ASC
+  description_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type ActionPreviousValues {
+  id: ID!
+  name: String!
+  description: String
+}
+
+input ActionScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ActionScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ActionScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ActionScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  description: String
+
+  """All values that are not equal to given value."""
+  description_not: String
+
+  """All values that are contained in given list."""
+  description_in: [String!]
+
+  """All values that are not contained in given list."""
+  description_not_in: [String!]
+
+  """All values less than the given value."""
+  description_lt: String
+
+  """All values less than or equal the given value."""
+  description_lte: String
+
+  """All values greater than the given value."""
+  description_gt: String
+
+  """All values greater than or equal the given value."""
+  description_gte: String
+
+  """All values containing the given string."""
+  description_contains: String
+
+  """All values not containing the given string."""
+  description_not_contains: String
+
+  """All values starting with the given string."""
+  description_starts_with: String
+
+  """All values not starting with the given string."""
+  description_not_starts_with: String
+
+  """All values ending with the given string."""
+  description_ends_with: String
+
+  """All values not ending with the given string."""
+  description_not_ends_with: String
+}
+
+type ActionSubscriptionPayload {
+  mutation: MutationType!
+  node: Action
+  updatedFields: [String!]
+  previousValues: ActionPreviousValues
+}
+
+input ActionSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ActionSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ActionSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ActionSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: ActionWhereInput
+}
+
+input ActionUpdateDataInput {
+  name: String
+  description: String
+}
+
+input ActionUpdateInput {
+  name: String
+  description: String
+}
+
+input ActionUpdateManyDataInput {
+  name: String
+  description: String
+}
+
+input ActionUpdateManyInput {
+  create: [ActionCreateInput!]
+  connect: [ActionWhereUniqueInput!]
+  set: [ActionWhereUniqueInput!]
+  disconnect: [ActionWhereUniqueInput!]
+  delete: [ActionWhereUniqueInput!]
+  update: [ActionUpdateWithWhereUniqueNestedInput!]
+  updateMany: [ActionUpdateManyWithWhereNestedInput!]
+  deleteMany: [ActionScalarWhereInput!]
+  upsert: [ActionUpsertWithWhereUniqueNestedInput!]
+}
+
+input ActionUpdateManyMutationInput {
+  name: String
+  description: String
+}
+
+input ActionUpdateManyWithWhereNestedInput {
+  where: ActionScalarWhereInput!
+  data: ActionUpdateManyDataInput!
+}
+
+input ActionUpdateWithWhereUniqueNestedInput {
+  where: ActionWhereUniqueInput!
+  data: ActionUpdateDataInput!
+}
+
+input ActionUpsertWithWhereUniqueNestedInput {
+  where: ActionWhereUniqueInput!
+  update: ActionUpdateDataInput!
+  create: ActionCreateInput!
+}
+
+input ActionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ActionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ActionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ActionWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  description: String
+
+  """All values that are not equal to given value."""
+  description_not: String
+
+  """All values that are contained in given list."""
+  description_in: [String!]
+
+  """All values that are not contained in given list."""
+  description_not_in: [String!]
+
+  """All values less than the given value."""
+  description_lt: String
+
+  """All values less than or equal the given value."""
+  description_lte: String
+
+  """All values greater than the given value."""
+  description_gt: String
+
+  """All values greater than or equal the given value."""
+  description_gte: String
+
+  """All values containing the given string."""
+  description_contains: String
+
+  """All values not containing the given string."""
+  description_not_contains: String
+
+  """All values starting with the given string."""
+  description_starts_with: String
+
+  """All values not starting with the given string."""
+  description_not_starts_with: String
+
+  """All values ending with the given string."""
+  description_ends_with: String
+
+  """All values not ending with the given string."""
+  description_not_ends_with: String
+}
+
+input ActionWhereUniqueInput {
+  id: ID
+  name: String
+}
+
+type AggregateAction {
+  count: Int!
+}
+
+type AggregateClient {
+  count: Int!
+}
+
+type AggregateProject {
+  count: Int!
+}
+
+type AggregateRole {
+  count: Int!
+}
 
 type AggregateUser {
+  count: Int!
+}
+
+type AggregateUserProjectRoles {
+  count: Int!
+}
+
+type AggregateUserWebsiteRoles {
+  count: Int!
+}
+
+type AggregateWebsite {
   count: Int!
 }
 
 type BatchPayload {
   """The number of nodes that have been affected by the Batch operation."""
   count: Long!
+}
+
+type Client implements Node {
+  id: ID!
+  name: String!
+  projects(where: ProjectWhereInput, orderBy: ProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Project!]
+  roles(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Role!]
+  websites(where: WebsiteWhereInput, orderBy: WebsiteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Website!]
+  owners(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+  secret: String
+}
+
+"""A connection to a list of items."""
+type ClientConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ClientEdge]!
+  aggregate: AggregateClient!
+}
+
+input ClientCreateInput {
+  name: String!
+  secret: String
+  projects: ProjectCreateManyWithoutClientInput
+  roles: RoleCreateManyWithoutClientInput
+  websites: WebsiteCreateManyWithoutClientInput
+  owners: UserCreateManyWithoutOwnsInput
+}
+
+input ClientCreateManyInput {
+  create: [ClientCreateInput!]
+  connect: [ClientWhereUniqueInput!]
+}
+
+input ClientCreateManyWithoutOwnersInput {
+  create: [ClientCreateWithoutOwnersInput!]
+  connect: [ClientWhereUniqueInput!]
+}
+
+input ClientCreateOneInput {
+  create: ClientCreateInput
+  connect: ClientWhereUniqueInput
+}
+
+input ClientCreateOneWithoutProjectsInput {
+  create: ClientCreateWithoutProjectsInput
+  connect: ClientWhereUniqueInput
+}
+
+input ClientCreateOneWithoutRolesInput {
+  create: ClientCreateWithoutRolesInput
+  connect: ClientWhereUniqueInput
+}
+
+input ClientCreateOneWithoutWebsitesInput {
+  create: ClientCreateWithoutWebsitesInput
+  connect: ClientWhereUniqueInput
+}
+
+input ClientCreateWithoutOwnersInput {
+  name: String!
+  secret: String
+  projects: ProjectCreateManyWithoutClientInput
+  roles: RoleCreateManyWithoutClientInput
+  websites: WebsiteCreateManyWithoutClientInput
+}
+
+input ClientCreateWithoutProjectsInput {
+  name: String!
+  secret: String
+  roles: RoleCreateManyWithoutClientInput
+  websites: WebsiteCreateManyWithoutClientInput
+  owners: UserCreateManyWithoutOwnsInput
+}
+
+input ClientCreateWithoutRolesInput {
+  name: String!
+  secret: String
+  projects: ProjectCreateManyWithoutClientInput
+  websites: WebsiteCreateManyWithoutClientInput
+  owners: UserCreateManyWithoutOwnsInput
+}
+
+input ClientCreateWithoutWebsitesInput {
+  name: String!
+  secret: String
+  projects: ProjectCreateManyWithoutClientInput
+  roles: RoleCreateManyWithoutClientInput
+  owners: UserCreateManyWithoutOwnsInput
+}
+
+"""An edge in a connection."""
+type ClientEdge {
+  """The item at the end of the edge."""
+  node: Client!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum ClientOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  secret_ASC
+  secret_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type ClientPreviousValues {
+  id: ID!
+  name: String!
+  secret: String
+}
+
+input ClientScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ClientScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ClientScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ClientScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  secret: String
+
+  """All values that are not equal to given value."""
+  secret_not: String
+
+  """All values that are contained in given list."""
+  secret_in: [String!]
+
+  """All values that are not contained in given list."""
+  secret_not_in: [String!]
+
+  """All values less than the given value."""
+  secret_lt: String
+
+  """All values less than or equal the given value."""
+  secret_lte: String
+
+  """All values greater than the given value."""
+  secret_gt: String
+
+  """All values greater than or equal the given value."""
+  secret_gte: String
+
+  """All values containing the given string."""
+  secret_contains: String
+
+  """All values not containing the given string."""
+  secret_not_contains: String
+
+  """All values starting with the given string."""
+  secret_starts_with: String
+
+  """All values not starting with the given string."""
+  secret_not_starts_with: String
+
+  """All values ending with the given string."""
+  secret_ends_with: String
+
+  """All values not ending with the given string."""
+  secret_not_ends_with: String
+}
+
+type ClientSubscriptionPayload {
+  mutation: MutationType!
+  node: Client
+  updatedFields: [String!]
+  previousValues: ClientPreviousValues
+}
+
+input ClientSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ClientSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ClientSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ClientSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: ClientWhereInput
+}
+
+input ClientUpdateDataInput {
+  name: String
+  secret: String
+  projects: ProjectUpdateManyWithoutClientInput
+  roles: RoleUpdateManyWithoutClientInput
+  websites: WebsiteUpdateManyWithoutClientInput
+  owners: UserUpdateManyWithoutOwnsInput
+}
+
+input ClientUpdateInput {
+  name: String
+  secret: String
+  projects: ProjectUpdateManyWithoutClientInput
+  roles: RoleUpdateManyWithoutClientInput
+  websites: WebsiteUpdateManyWithoutClientInput
+  owners: UserUpdateManyWithoutOwnsInput
+}
+
+input ClientUpdateManyDataInput {
+  name: String
+  secret: String
+}
+
+input ClientUpdateManyInput {
+  create: [ClientCreateInput!]
+  connect: [ClientWhereUniqueInput!]
+  set: [ClientWhereUniqueInput!]
+  disconnect: [ClientWhereUniqueInput!]
+  delete: [ClientWhereUniqueInput!]
+  update: [ClientUpdateWithWhereUniqueNestedInput!]
+  updateMany: [ClientUpdateManyWithWhereNestedInput!]
+  deleteMany: [ClientScalarWhereInput!]
+  upsert: [ClientUpsertWithWhereUniqueNestedInput!]
+}
+
+input ClientUpdateManyMutationInput {
+  name: String
+  secret: String
+}
+
+input ClientUpdateManyWithoutOwnersInput {
+  create: [ClientCreateWithoutOwnersInput!]
+  connect: [ClientWhereUniqueInput!]
+  set: [ClientWhereUniqueInput!]
+  disconnect: [ClientWhereUniqueInput!]
+  delete: [ClientWhereUniqueInput!]
+  update: [ClientUpdateWithWhereUniqueWithoutOwnersInput!]
+  updateMany: [ClientUpdateManyWithWhereNestedInput!]
+  deleteMany: [ClientScalarWhereInput!]
+  upsert: [ClientUpsertWithWhereUniqueWithoutOwnersInput!]
+}
+
+input ClientUpdateManyWithWhereNestedInput {
+  where: ClientScalarWhereInput!
+  data: ClientUpdateManyDataInput!
+}
+
+input ClientUpdateOneRequiredWithoutProjectsInput {
+  create: ClientCreateWithoutProjectsInput
+  connect: ClientWhereUniqueInput
+  update: ClientUpdateWithoutProjectsDataInput
+  upsert: ClientUpsertWithoutProjectsInput
+}
+
+input ClientUpdateOneRequiredWithoutRolesInput {
+  create: ClientCreateWithoutRolesInput
+  connect: ClientWhereUniqueInput
+  update: ClientUpdateWithoutRolesDataInput
+  upsert: ClientUpsertWithoutRolesInput
+}
+
+input ClientUpdateOneRequiredWithoutWebsitesInput {
+  create: ClientCreateWithoutWebsitesInput
+  connect: ClientWhereUniqueInput
+  update: ClientUpdateWithoutWebsitesDataInput
+  upsert: ClientUpsertWithoutWebsitesInput
+}
+
+input ClientUpdateWithoutOwnersDataInput {
+  name: String
+  secret: String
+  projects: ProjectUpdateManyWithoutClientInput
+  roles: RoleUpdateManyWithoutClientInput
+  websites: WebsiteUpdateManyWithoutClientInput
+}
+
+input ClientUpdateWithoutProjectsDataInput {
+  name: String
+  secret: String
+  roles: RoleUpdateManyWithoutClientInput
+  websites: WebsiteUpdateManyWithoutClientInput
+  owners: UserUpdateManyWithoutOwnsInput
+}
+
+input ClientUpdateWithoutRolesDataInput {
+  name: String
+  secret: String
+  projects: ProjectUpdateManyWithoutClientInput
+  websites: WebsiteUpdateManyWithoutClientInput
+  owners: UserUpdateManyWithoutOwnsInput
+}
+
+input ClientUpdateWithoutWebsitesDataInput {
+  name: String
+  secret: String
+  projects: ProjectUpdateManyWithoutClientInput
+  roles: RoleUpdateManyWithoutClientInput
+  owners: UserUpdateManyWithoutOwnsInput
+}
+
+input ClientUpdateWithWhereUniqueNestedInput {
+  where: ClientWhereUniqueInput!
+  data: ClientUpdateDataInput!
+}
+
+input ClientUpdateWithWhereUniqueWithoutOwnersInput {
+  where: ClientWhereUniqueInput!
+  data: ClientUpdateWithoutOwnersDataInput!
+}
+
+input ClientUpsertWithoutProjectsInput {
+  update: ClientUpdateWithoutProjectsDataInput!
+  create: ClientCreateWithoutProjectsInput!
+}
+
+input ClientUpsertWithoutRolesInput {
+  update: ClientUpdateWithoutRolesDataInput!
+  create: ClientCreateWithoutRolesInput!
+}
+
+input ClientUpsertWithoutWebsitesInput {
+  update: ClientUpdateWithoutWebsitesDataInput!
+  create: ClientCreateWithoutWebsitesInput!
+}
+
+input ClientUpsertWithWhereUniqueNestedInput {
+  where: ClientWhereUniqueInput!
+  update: ClientUpdateDataInput!
+  create: ClientCreateInput!
+}
+
+input ClientUpsertWithWhereUniqueWithoutOwnersInput {
+  where: ClientWhereUniqueInput!
+  update: ClientUpdateWithoutOwnersDataInput!
+  create: ClientCreateWithoutOwnersInput!
+}
+
+input ClientWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ClientWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ClientWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ClientWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  secret: String
+
+  """All values that are not equal to given value."""
+  secret_not: String
+
+  """All values that are contained in given list."""
+  secret_in: [String!]
+
+  """All values that are not contained in given list."""
+  secret_not_in: [String!]
+
+  """All values less than the given value."""
+  secret_lt: String
+
+  """All values less than or equal the given value."""
+  secret_lte: String
+
+  """All values greater than the given value."""
+  secret_gt: String
+
+  """All values greater than or equal the given value."""
+  secret_gte: String
+
+  """All values containing the given string."""
+  secret_contains: String
+
+  """All values not containing the given string."""
+  secret_not_contains: String
+
+  """All values starting with the given string."""
+  secret_starts_with: String
+
+  """All values not starting with the given string."""
+  secret_not_starts_with: String
+
+  """All values ending with the given string."""
+  secret_ends_with: String
+
+  """All values not ending with the given string."""
+  secret_not_ends_with: String
+  projects_every: ProjectWhereInput
+  projects_some: ProjectWhereInput
+  projects_none: ProjectWhereInput
+  roles_every: RoleWhereInput
+  roles_some: RoleWhereInput
+  roles_none: RoleWhereInput
+  websites_every: WebsiteWhereInput
+  websites_some: WebsiteWhereInput
+  websites_none: WebsiteWhereInput
+  owners_every: UserWhereInput
+  owners_some: UserWhereInput
+  owners_none: UserWhereInput
+}
+
+input ClientWhereUniqueInput {
+  id: ID
+  secret: String
 }
 
 """
@@ -18,11 +1038,45 @@ scalar Long
 
 type Mutation {
   createUser(data: UserCreateInput!): User!
+  createUserProjectRoles(data: UserProjectRolesCreateInput!): UserProjectRoles!
+  createUserWebsiteRoles(data: UserWebsiteRolesCreateInput!): UserWebsiteRoles!
+  createProject(data: ProjectCreateInput!): Project!
+  createWebsite(data: WebsiteCreateInput!): Website!
+  createAction(data: ActionCreateInput!): Action!
+  createClient(data: ClientCreateInput!): Client!
+  createRole(data: RoleCreateInput!): Role!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  updateProject(data: ProjectUpdateInput!, where: ProjectWhereUniqueInput!): Project
+  updateWebsite(data: WebsiteUpdateInput!, where: WebsiteWhereUniqueInput!): Website
+  updateAction(data: ActionUpdateInput!, where: ActionWhereUniqueInput!): Action
+  updateClient(data: ClientUpdateInput!, where: ClientWhereUniqueInput!): Client
+  updateRole(data: RoleUpdateInput!, where: RoleWhereUniqueInput!): Role
   deleteUser(where: UserWhereUniqueInput!): User
+  deleteProject(where: ProjectWhereUniqueInput!): Project
+  deleteWebsite(where: WebsiteWhereUniqueInput!): Website
+  deleteAction(where: ActionWhereUniqueInput!): Action
+  deleteClient(where: ClientWhereUniqueInput!): Client
+  deleteRole(where: RoleWhereUniqueInput!): Role
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  upsertProject(where: ProjectWhereUniqueInput!, create: ProjectCreateInput!, update: ProjectUpdateInput!): Project!
+  upsertWebsite(where: WebsiteWhereUniqueInput!, create: WebsiteCreateInput!, update: WebsiteUpdateInput!): Website!
+  upsertAction(where: ActionWhereUniqueInput!, create: ActionCreateInput!, update: ActionUpdateInput!): Action!
+  upsertClient(where: ClientWhereUniqueInput!, create: ClientCreateInput!, update: ClientUpdateInput!): Client!
+  upsertRole(where: RoleWhereUniqueInput!, create: RoleCreateInput!, update: RoleUpdateInput!): Role!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  updateManyProjects(data: ProjectUpdateManyMutationInput!, where: ProjectWhereInput): BatchPayload!
+  updateManyWebsites(data: WebsiteUpdateManyMutationInput!, where: WebsiteWhereInput): BatchPayload!
+  updateManyActions(data: ActionUpdateManyMutationInput!, where: ActionWhereInput): BatchPayload!
+  updateManyClients(data: ClientUpdateManyMutationInput!, where: ClientWhereInput): BatchPayload!
+  updateManyRoles(data: RoleUpdateManyMutationInput!, where: RoleWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
+  deleteManyUserProjectRoleses(where: UserProjectRolesWhereInput): BatchPayload!
+  deleteManyUserWebsiteRoleses(where: UserWebsiteRolesWhereInput): BatchPayload!
+  deleteManyProjects(where: ProjectWhereInput): BatchPayload!
+  deleteManyWebsites(where: WebsiteWhereInput): BatchPayload!
+  deleteManyActions(where: ActionWhereInput): BatchPayload!
+  deleteManyClients(where: ClientWhereInput): BatchPayload!
+  deleteManyRoles(where: RoleWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -52,51 +1106,75 @@ type PageInfo {
   endCursor: String
 }
 
-type Query {
-  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
-  user(where: UserWhereUniqueInput!): User
-  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
-
-  """Fetches an object given its ID"""
-  node(
-    """The ID of an object"""
-    id: ID!
-  ): Node
-}
-
-type Subscription {
-  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
-}
-
-type User implements Node {
+type Project implements Node {
+  foxer360Id: ID!
   id: ID!
   name: String!
+  client: Client!
+  websites(where: WebsiteWhereInput, orderBy: WebsiteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Website!]
 }
 
 """A connection to a list of items."""
-type UserConnection {
+type ProjectConnection {
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 
   """A list of edges."""
-  edges: [UserEdge]!
-  aggregate: AggregateUser!
+  edges: [ProjectEdge]!
+  aggregate: AggregateProject!
 }
 
-input UserCreateInput {
+input ProjectCreateInput {
+  foxer360Id: ID!
   name: String!
+  client: ClientCreateOneWithoutProjectsInput!
+  websites: WebsiteCreateManyWithoutProjectInput
+}
+
+input ProjectCreateManyInput {
+  create: [ProjectCreateInput!]
+  connect: [ProjectWhereUniqueInput!]
+}
+
+input ProjectCreateManyWithoutClientInput {
+  create: [ProjectCreateWithoutClientInput!]
+  connect: [ProjectWhereUniqueInput!]
+}
+
+input ProjectCreateOneInput {
+  create: ProjectCreateInput
+  connect: ProjectWhereUniqueInput
+}
+
+input ProjectCreateOneWithoutWebsitesInput {
+  create: ProjectCreateWithoutWebsitesInput
+  connect: ProjectWhereUniqueInput
+}
+
+input ProjectCreateWithoutClientInput {
+  foxer360Id: ID!
+  name: String!
+  websites: WebsiteCreateManyWithoutProjectInput
+}
+
+input ProjectCreateWithoutWebsitesInput {
+  foxer360Id: ID!
+  name: String!
+  client: ClientCreateOneWithoutProjectsInput!
 }
 
 """An edge in a connection."""
-type UserEdge {
+type ProjectEdge {
   """The item at the end of the edge."""
-  node: User!
+  node: Project!
 
   """A cursor for use in pagination."""
   cursor: String!
 }
 
-enum UserOrderByInput {
+enum ProjectOrderByInput {
+  foxer360Id_ASC
+  foxer360Id_DESC
   id_ASC
   id_DESC
   name_ASC
@@ -107,67 +1185,61 @@ enum UserOrderByInput {
   createdAt_DESC
 }
 
-type UserPreviousValues {
+type ProjectPreviousValues {
+  foxer360Id: ID!
   id: ID!
   name: String!
 }
 
-type UserSubscriptionPayload {
-  mutation: MutationType!
-  node: User
-  updatedFields: [String!]
-  previousValues: UserPreviousValues
-}
-
-input UserSubscriptionWhereInput {
+input ProjectScalarWhereInput {
   """Logical AND on all given filters."""
-  AND: [UserSubscriptionWhereInput!]
+  AND: [ProjectScalarWhereInput!]
 
   """Logical OR on all given filters."""
-  OR: [UserSubscriptionWhereInput!]
+  OR: [ProjectScalarWhereInput!]
 
   """Logical NOT on all given filters combined by AND."""
-  NOT: [UserSubscriptionWhereInput!]
+  NOT: [ProjectScalarWhereInput!]
+  foxer360Id: ID
 
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
-  mutation_in: [MutationType!]
+  """All values that are not equal to given value."""
+  foxer360Id_not: ID
 
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
-  updatedFields_contains: String
+  """All values that are contained in given list."""
+  foxer360Id_in: [ID!]
 
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
-  updatedFields_contains_every: [String!]
+  """All values that are not contained in given list."""
+  foxer360Id_not_in: [ID!]
 
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
-  updatedFields_contains_some: [String!]
-  node: UserWhereInput
-}
+  """All values less than the given value."""
+  foxer360Id_lt: ID
 
-input UserUpdateInput {
-  name: String
-}
+  """All values less than or equal the given value."""
+  foxer360Id_lte: ID
 
-input UserUpdateManyMutationInput {
-  name: String
-}
+  """All values greater than the given value."""
+  foxer360Id_gt: ID
 
-input UserWhereInput {
-  """Logical AND on all given filters."""
-  AND: [UserWhereInput!]
+  """All values greater than or equal the given value."""
+  foxer360Id_gte: ID
 
-  """Logical OR on all given filters."""
-  OR: [UserWhereInput!]
+  """All values containing the given string."""
+  foxer360Id_contains: ID
 
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [UserWhereInput!]
+  """All values not containing the given string."""
+  foxer360Id_not_contains: ID
+
+  """All values starting with the given string."""
+  foxer360Id_starts_with: ID
+
+  """All values not starting with the given string."""
+  foxer360Id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  foxer360Id_ends_with: ID
+
+  """All values not ending with the given string."""
+  foxer360Id_not_ends_with: ID
   id: ID
 
   """All values that are not equal to given value."""
@@ -250,6 +1322,2122 @@ input UserWhereInput {
   name_not_ends_with: String
 }
 
+type ProjectSubscriptionPayload {
+  mutation: MutationType!
+  node: Project
+  updatedFields: [String!]
+  previousValues: ProjectPreviousValues
+}
+
+input ProjectSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ProjectSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ProjectSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ProjectSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: ProjectWhereInput
+}
+
+input ProjectUpdateDataInput {
+  foxer360Id: ID
+  name: String
+  client: ClientUpdateOneRequiredWithoutProjectsInput
+  websites: WebsiteUpdateManyWithoutProjectInput
+}
+
+input ProjectUpdateInput {
+  foxer360Id: ID
+  name: String
+  client: ClientUpdateOneRequiredWithoutProjectsInput
+  websites: WebsiteUpdateManyWithoutProjectInput
+}
+
+input ProjectUpdateManyDataInput {
+  foxer360Id: ID
+  name: String
+}
+
+input ProjectUpdateManyInput {
+  create: [ProjectCreateInput!]
+  connect: [ProjectWhereUniqueInput!]
+  set: [ProjectWhereUniqueInput!]
+  disconnect: [ProjectWhereUniqueInput!]
+  delete: [ProjectWhereUniqueInput!]
+  update: [ProjectUpdateWithWhereUniqueNestedInput!]
+  updateMany: [ProjectUpdateManyWithWhereNestedInput!]
+  deleteMany: [ProjectScalarWhereInput!]
+  upsert: [ProjectUpsertWithWhereUniqueNestedInput!]
+}
+
+input ProjectUpdateManyMutationInput {
+  foxer360Id: ID
+  name: String
+}
+
+input ProjectUpdateManyWithoutClientInput {
+  create: [ProjectCreateWithoutClientInput!]
+  connect: [ProjectWhereUniqueInput!]
+  set: [ProjectWhereUniqueInput!]
+  disconnect: [ProjectWhereUniqueInput!]
+  delete: [ProjectWhereUniqueInput!]
+  update: [ProjectUpdateWithWhereUniqueWithoutClientInput!]
+  updateMany: [ProjectUpdateManyWithWhereNestedInput!]
+  deleteMany: [ProjectScalarWhereInput!]
+  upsert: [ProjectUpsertWithWhereUniqueWithoutClientInput!]
+}
+
+input ProjectUpdateManyWithWhereNestedInput {
+  where: ProjectScalarWhereInput!
+  data: ProjectUpdateManyDataInput!
+}
+
+input ProjectUpdateOneRequiredWithoutWebsitesInput {
+  create: ProjectCreateWithoutWebsitesInput
+  connect: ProjectWhereUniqueInput
+  update: ProjectUpdateWithoutWebsitesDataInput
+  upsert: ProjectUpsertWithoutWebsitesInput
+}
+
+input ProjectUpdateWithoutClientDataInput {
+  foxer360Id: ID
+  name: String
+  websites: WebsiteUpdateManyWithoutProjectInput
+}
+
+input ProjectUpdateWithoutWebsitesDataInput {
+  foxer360Id: ID
+  name: String
+  client: ClientUpdateOneRequiredWithoutProjectsInput
+}
+
+input ProjectUpdateWithWhereUniqueNestedInput {
+  where: ProjectWhereUniqueInput!
+  data: ProjectUpdateDataInput!
+}
+
+input ProjectUpdateWithWhereUniqueWithoutClientInput {
+  where: ProjectWhereUniqueInput!
+  data: ProjectUpdateWithoutClientDataInput!
+}
+
+input ProjectUpsertWithoutWebsitesInput {
+  update: ProjectUpdateWithoutWebsitesDataInput!
+  create: ProjectCreateWithoutWebsitesInput!
+}
+
+input ProjectUpsertWithWhereUniqueNestedInput {
+  where: ProjectWhereUniqueInput!
+  update: ProjectUpdateDataInput!
+  create: ProjectCreateInput!
+}
+
+input ProjectUpsertWithWhereUniqueWithoutClientInput {
+  where: ProjectWhereUniqueInput!
+  update: ProjectUpdateWithoutClientDataInput!
+  create: ProjectCreateWithoutClientInput!
+}
+
+input ProjectWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ProjectWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ProjectWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ProjectWhereInput!]
+  foxer360Id: ID
+
+  """All values that are not equal to given value."""
+  foxer360Id_not: ID
+
+  """All values that are contained in given list."""
+  foxer360Id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  foxer360Id_not_in: [ID!]
+
+  """All values less than the given value."""
+  foxer360Id_lt: ID
+
+  """All values less than or equal the given value."""
+  foxer360Id_lte: ID
+
+  """All values greater than the given value."""
+  foxer360Id_gt: ID
+
+  """All values greater than or equal the given value."""
+  foxer360Id_gte: ID
+
+  """All values containing the given string."""
+  foxer360Id_contains: ID
+
+  """All values not containing the given string."""
+  foxer360Id_not_contains: ID
+
+  """All values starting with the given string."""
+  foxer360Id_starts_with: ID
+
+  """All values not starting with the given string."""
+  foxer360Id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  foxer360Id_ends_with: ID
+
+  """All values not ending with the given string."""
+  foxer360Id_not_ends_with: ID
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  client: ClientWhereInput
+  websites_every: WebsiteWhereInput
+  websites_some: WebsiteWhereInput
+  websites_none: WebsiteWhereInput
+}
+
+input ProjectWhereUniqueInput {
+  foxer360Id: ID
+  id: ID
+}
+
+type Query {
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
+  userProjectRoleses(where: UserProjectRolesWhereInput, orderBy: UserProjectRolesOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserProjectRoles]!
+  userWebsiteRoleses(where: UserWebsiteRolesWhereInput, orderBy: UserWebsiteRolesOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserWebsiteRoles]!
+  projects(where: ProjectWhereInput, orderBy: ProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Project]!
+  websites(where: WebsiteWhereInput, orderBy: WebsiteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Website]!
+  actions(where: ActionWhereInput, orderBy: ActionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Action]!
+  clients(where: ClientWhereInput, orderBy: ClientOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Client]!
+  roles(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Role]!
+  user(where: UserWhereUniqueInput!): User
+  project(where: ProjectWhereUniqueInput!): Project
+  website(where: WebsiteWhereUniqueInput!): Website
+  action(where: ActionWhereUniqueInput!): Action
+  client(where: ClientWhereUniqueInput!): Client
+  role(where: RoleWhereUniqueInput!): Role
+  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  userProjectRolesesConnection(where: UserProjectRolesWhereInput, orderBy: UserProjectRolesOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserProjectRolesConnection!
+  userWebsiteRolesesConnection(where: UserWebsiteRolesWhereInput, orderBy: UserWebsiteRolesOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserWebsiteRolesConnection!
+  projectsConnection(where: ProjectWhereInput, orderBy: ProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProjectConnection!
+  websitesConnection(where: WebsiteWhereInput, orderBy: WebsiteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): WebsiteConnection!
+  actionsConnection(where: ActionWhereInput, orderBy: ActionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ActionConnection!
+  clientsConnection(where: ClientWhereInput, orderBy: ClientOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ClientConnection!
+  rolesConnection(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoleConnection!
+
+  """Fetches an object given its ID"""
+  node(
+    """The ID of an object"""
+    id: ID!
+  ): Node
+}
+
+type Role implements Node {
+  id: ID!
+  name: String!
+  actions(where: ActionWhereInput, orderBy: ActionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Action!]
+  client: Client!
+}
+
+"""A connection to a list of items."""
+type RoleConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [RoleEdge]!
+  aggregate: AggregateRole!
+}
+
+input RoleCreateInput {
+  name: String!
+  actions: ActionCreateManyInput
+  client: ClientCreateOneWithoutRolesInput!
+}
+
+input RoleCreateManyInput {
+  create: [RoleCreateInput!]
+  connect: [RoleWhereUniqueInput!]
+}
+
+input RoleCreateManyWithoutClientInput {
+  create: [RoleCreateWithoutClientInput!]
+  connect: [RoleWhereUniqueInput!]
+}
+
+input RoleCreateWithoutClientInput {
+  name: String!
+  actions: ActionCreateManyInput
+}
+
+"""An edge in a connection."""
+type RoleEdge {
+  """The item at the end of the edge."""
+  node: Role!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum RoleOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type RolePreviousValues {
+  id: ID!
+  name: String!
+}
+
+input RoleScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [RoleScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [RoleScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [RoleScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+}
+
+type RoleSubscriptionPayload {
+  mutation: MutationType!
+  node: Role
+  updatedFields: [String!]
+  previousValues: RolePreviousValues
+}
+
+input RoleSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [RoleSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [RoleSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [RoleSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: RoleWhereInput
+}
+
+input RoleUpdateDataInput {
+  name: String
+  actions: ActionUpdateManyInput
+  client: ClientUpdateOneRequiredWithoutRolesInput
+}
+
+input RoleUpdateInput {
+  name: String
+  actions: ActionUpdateManyInput
+  client: ClientUpdateOneRequiredWithoutRolesInput
+}
+
+input RoleUpdateManyDataInput {
+  name: String
+}
+
+input RoleUpdateManyInput {
+  create: [RoleCreateInput!]
+  connect: [RoleWhereUniqueInput!]
+  set: [RoleWhereUniqueInput!]
+  disconnect: [RoleWhereUniqueInput!]
+  delete: [RoleWhereUniqueInput!]
+  update: [RoleUpdateWithWhereUniqueNestedInput!]
+  updateMany: [RoleUpdateManyWithWhereNestedInput!]
+  deleteMany: [RoleScalarWhereInput!]
+  upsert: [RoleUpsertWithWhereUniqueNestedInput!]
+}
+
+input RoleUpdateManyMutationInput {
+  name: String
+}
+
+input RoleUpdateManyWithoutClientInput {
+  create: [RoleCreateWithoutClientInput!]
+  connect: [RoleWhereUniqueInput!]
+  set: [RoleWhereUniqueInput!]
+  disconnect: [RoleWhereUniqueInput!]
+  delete: [RoleWhereUniqueInput!]
+  update: [RoleUpdateWithWhereUniqueWithoutClientInput!]
+  updateMany: [RoleUpdateManyWithWhereNestedInput!]
+  deleteMany: [RoleScalarWhereInput!]
+  upsert: [RoleUpsertWithWhereUniqueWithoutClientInput!]
+}
+
+input RoleUpdateManyWithWhereNestedInput {
+  where: RoleScalarWhereInput!
+  data: RoleUpdateManyDataInput!
+}
+
+input RoleUpdateWithoutClientDataInput {
+  name: String
+  actions: ActionUpdateManyInput
+}
+
+input RoleUpdateWithWhereUniqueNestedInput {
+  where: RoleWhereUniqueInput!
+  data: RoleUpdateDataInput!
+}
+
+input RoleUpdateWithWhereUniqueWithoutClientInput {
+  where: RoleWhereUniqueInput!
+  data: RoleUpdateWithoutClientDataInput!
+}
+
+input RoleUpsertWithWhereUniqueNestedInput {
+  where: RoleWhereUniqueInput!
+  update: RoleUpdateDataInput!
+  create: RoleCreateInput!
+}
+
+input RoleUpsertWithWhereUniqueWithoutClientInput {
+  where: RoleWhereUniqueInput!
+  update: RoleUpdateWithoutClientDataInput!
+  create: RoleCreateWithoutClientInput!
+}
+
+input RoleWhereInput {
+  """Logical AND on all given filters."""
+  AND: [RoleWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [RoleWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [RoleWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  actions_every: ActionWhereInput
+  actions_some: ActionWhereInput
+  actions_none: ActionWhereInput
+  client: ClientWhereInput
+}
+
+input RoleWhereUniqueInput {
+  id: ID
+}
+
+type Subscription {
+  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+  userProjectRoles(where: UserProjectRolesSubscriptionWhereInput): UserProjectRolesSubscriptionPayload
+  userWebsiteRoles(where: UserWebsiteRolesSubscriptionWhereInput): UserWebsiteRolesSubscriptionPayload
+  project(where: ProjectSubscriptionWhereInput): ProjectSubscriptionPayload
+  website(where: WebsiteSubscriptionWhereInput): WebsiteSubscriptionPayload
+  action(where: ActionSubscriptionWhereInput): ActionSubscriptionPayload
+  client(where: ClientSubscriptionWhereInput): ClientSubscriptionPayload
+  role(where: RoleSubscriptionWhereInput): RoleSubscriptionPayload
+}
+
+type User implements Node {
+  auth0Id: ID!
+  avatar: String
+  email: String!
+  id: ID!
+  name: String!
+  clients(where: ClientWhereInput, orderBy: ClientOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Client!]
+  enabledProjects(where: ProjectWhereInput, orderBy: ProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Project!]
+  enabledWebsites(where: WebsiteWhereInput, orderBy: WebsiteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Website!]
+  owns(where: ClientWhereInput, orderBy: ClientOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Client!]
+  roles(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Role!]
+  projectRoles(where: UserProjectRolesWhereInput, orderBy: UserProjectRolesOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserProjectRoles!]
+  websiteRoles(where: UserWebsiteRolesWhereInput, orderBy: UserWebsiteRolesOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserWebsiteRoles!]
+  superuser: Boolean!
+}
+
+"""A connection to a list of items."""
+type UserConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [UserEdge]!
+  aggregate: AggregateUser!
+}
+
+input UserCreateInput {
+  auth0Id: ID!
+  avatar: String
+  email: String!
+  name: String!
+  superuser: Boolean
+  clients: ClientCreateManyInput
+  enabledProjects: ProjectCreateManyInput
+  enabledWebsites: WebsiteCreateManyInput
+  owns: ClientCreateManyWithoutOwnersInput
+  roles: RoleCreateManyInput
+  projectRoles: UserProjectRolesCreateManyWithoutUserInput
+  websiteRoles: UserWebsiteRolesCreateManyWithoutUserInput
+}
+
+input UserCreateManyWithoutOwnsInput {
+  create: [UserCreateWithoutOwnsInput!]
+  connect: [UserWhereUniqueInput!]
+}
+
+input UserCreateOneWithoutProjectRolesInput {
+  create: UserCreateWithoutProjectRolesInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateOneWithoutWebsiteRolesInput {
+  create: UserCreateWithoutWebsiteRolesInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutOwnsInput {
+  auth0Id: ID!
+  avatar: String
+  email: String!
+  name: String!
+  superuser: Boolean
+  clients: ClientCreateManyInput
+  enabledProjects: ProjectCreateManyInput
+  enabledWebsites: WebsiteCreateManyInput
+  roles: RoleCreateManyInput
+  projectRoles: UserProjectRolesCreateManyWithoutUserInput
+  websiteRoles: UserWebsiteRolesCreateManyWithoutUserInput
+}
+
+input UserCreateWithoutProjectRolesInput {
+  auth0Id: ID!
+  avatar: String
+  email: String!
+  name: String!
+  superuser: Boolean
+  clients: ClientCreateManyInput
+  enabledProjects: ProjectCreateManyInput
+  enabledWebsites: WebsiteCreateManyInput
+  owns: ClientCreateManyWithoutOwnersInput
+  roles: RoleCreateManyInput
+  websiteRoles: UserWebsiteRolesCreateManyWithoutUserInput
+}
+
+input UserCreateWithoutWebsiteRolesInput {
+  auth0Id: ID!
+  avatar: String
+  email: String!
+  name: String!
+  superuser: Boolean
+  clients: ClientCreateManyInput
+  enabledProjects: ProjectCreateManyInput
+  enabledWebsites: WebsiteCreateManyInput
+  owns: ClientCreateManyWithoutOwnersInput
+  roles: RoleCreateManyInput
+  projectRoles: UserProjectRolesCreateManyWithoutUserInput
+}
+
+"""An edge in a connection."""
+type UserEdge {
+  """The item at the end of the edge."""
+  node: User!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum UserOrderByInput {
+  auth0Id_ASC
+  auth0Id_DESC
+  avatar_ASC
+  avatar_DESC
+  email_ASC
+  email_DESC
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  superuser_ASC
+  superuser_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type UserPreviousValues {
+  auth0Id: ID!
+  avatar: String
+  email: String!
+  id: ID!
+  name: String!
+  superuser: Boolean!
+}
+
+type UserProjectRoles {
+  user: User!
+  client: Client!
+  project: Project!
+  roles(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Role!]
+}
+
+"""A connection to a list of items."""
+type UserProjectRolesConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [UserProjectRolesEdge]!
+  aggregate: AggregateUserProjectRoles!
+}
+
+input UserProjectRolesCreateInput {
+  user: UserCreateOneWithoutProjectRolesInput!
+  client: ClientCreateOneInput!
+  project: ProjectCreateOneInput!
+  roles: RoleCreateManyInput
+}
+
+input UserProjectRolesCreateManyWithoutUserInput {
+  create: [UserProjectRolesCreateWithoutUserInput!]
+}
+
+input UserProjectRolesCreateWithoutUserInput {
+  client: ClientCreateOneInput!
+  project: ProjectCreateOneInput!
+  roles: RoleCreateManyInput
+}
+
+"""An edge in a connection."""
+type UserProjectRolesEdge {
+  """The item at the end of the edge."""
+  node: UserProjectRoles!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum UserProjectRolesOrderByInput {
+  id_ASC
+  id_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type UserProjectRolesSubscriptionPayload {
+  mutation: MutationType!
+  node: UserProjectRoles
+  updatedFields: [String!]
+}
+
+input UserProjectRolesSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [UserProjectRolesSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [UserProjectRolesSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [UserProjectRolesSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: UserProjectRolesWhereInput
+}
+
+input UserProjectRolesUpdateManyWithoutUserInput {
+  create: [UserProjectRolesCreateWithoutUserInput!]
+}
+
+input UserProjectRolesWhereInput {
+  """Logical AND on all given filters."""
+  AND: [UserProjectRolesWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [UserProjectRolesWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [UserProjectRolesWhereInput!]
+  user: UserWhereInput
+  client: ClientWhereInput
+  project: ProjectWhereInput
+  roles_every: RoleWhereInput
+  roles_some: RoleWhereInput
+  roles_none: RoleWhereInput
+}
+
+input UserScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [UserScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [UserScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [UserScalarWhereInput!]
+  auth0Id: ID
+
+  """All values that are not equal to given value."""
+  auth0Id_not: ID
+
+  """All values that are contained in given list."""
+  auth0Id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  auth0Id_not_in: [ID!]
+
+  """All values less than the given value."""
+  auth0Id_lt: ID
+
+  """All values less than or equal the given value."""
+  auth0Id_lte: ID
+
+  """All values greater than the given value."""
+  auth0Id_gt: ID
+
+  """All values greater than or equal the given value."""
+  auth0Id_gte: ID
+
+  """All values containing the given string."""
+  auth0Id_contains: ID
+
+  """All values not containing the given string."""
+  auth0Id_not_contains: ID
+
+  """All values starting with the given string."""
+  auth0Id_starts_with: ID
+
+  """All values not starting with the given string."""
+  auth0Id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  auth0Id_ends_with: ID
+
+  """All values not ending with the given string."""
+  auth0Id_not_ends_with: ID
+  avatar: String
+
+  """All values that are not equal to given value."""
+  avatar_not: String
+
+  """All values that are contained in given list."""
+  avatar_in: [String!]
+
+  """All values that are not contained in given list."""
+  avatar_not_in: [String!]
+
+  """All values less than the given value."""
+  avatar_lt: String
+
+  """All values less than or equal the given value."""
+  avatar_lte: String
+
+  """All values greater than the given value."""
+  avatar_gt: String
+
+  """All values greater than or equal the given value."""
+  avatar_gte: String
+
+  """All values containing the given string."""
+  avatar_contains: String
+
+  """All values not containing the given string."""
+  avatar_not_contains: String
+
+  """All values starting with the given string."""
+  avatar_starts_with: String
+
+  """All values not starting with the given string."""
+  avatar_not_starts_with: String
+
+  """All values ending with the given string."""
+  avatar_ends_with: String
+
+  """All values not ending with the given string."""
+  avatar_not_ends_with: String
+  email: String
+
+  """All values that are not equal to given value."""
+  email_not: String
+
+  """All values that are contained in given list."""
+  email_in: [String!]
+
+  """All values that are not contained in given list."""
+  email_not_in: [String!]
+
+  """All values less than the given value."""
+  email_lt: String
+
+  """All values less than or equal the given value."""
+  email_lte: String
+
+  """All values greater than the given value."""
+  email_gt: String
+
+  """All values greater than or equal the given value."""
+  email_gte: String
+
+  """All values containing the given string."""
+  email_contains: String
+
+  """All values not containing the given string."""
+  email_not_contains: String
+
+  """All values starting with the given string."""
+  email_starts_with: String
+
+  """All values not starting with the given string."""
+  email_not_starts_with: String
+
+  """All values ending with the given string."""
+  email_ends_with: String
+
+  """All values not ending with the given string."""
+  email_not_ends_with: String
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  superuser: Boolean
+
+  """All values that are not equal to given value."""
+  superuser_not: Boolean
+}
+
+type UserSubscriptionPayload {
+  mutation: MutationType!
+  node: User
+  updatedFields: [String!]
+  previousValues: UserPreviousValues
+}
+
+input UserSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [UserSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [UserSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [UserSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: UserWhereInput
+}
+
+input UserUpdateInput {
+  auth0Id: ID
+  avatar: String
+  email: String
+  name: String
+  superuser: Boolean
+  clients: ClientUpdateManyInput
+  enabledProjects: ProjectUpdateManyInput
+  enabledWebsites: WebsiteUpdateManyInput
+  owns: ClientUpdateManyWithoutOwnersInput
+  roles: RoleUpdateManyInput
+  projectRoles: UserProjectRolesUpdateManyWithoutUserInput
+  websiteRoles: UserWebsiteRolesUpdateManyWithoutUserInput
+}
+
+input UserUpdateManyDataInput {
+  auth0Id: ID
+  avatar: String
+  email: String
+  name: String
+  superuser: Boolean
+}
+
+input UserUpdateManyMutationInput {
+  auth0Id: ID
+  avatar: String
+  email: String
+  name: String
+  superuser: Boolean
+}
+
+input UserUpdateManyWithoutOwnsInput {
+  create: [UserCreateWithoutOwnsInput!]
+  connect: [UserWhereUniqueInput!]
+  set: [UserWhereUniqueInput!]
+  disconnect: [UserWhereUniqueInput!]
+  delete: [UserWhereUniqueInput!]
+  update: [UserUpdateWithWhereUniqueWithoutOwnsInput!]
+  updateMany: [UserUpdateManyWithWhereNestedInput!]
+  deleteMany: [UserScalarWhereInput!]
+  upsert: [UserUpsertWithWhereUniqueWithoutOwnsInput!]
+}
+
+input UserUpdateManyWithWhereNestedInput {
+  where: UserScalarWhereInput!
+  data: UserUpdateManyDataInput!
+}
+
+input UserUpdateWithoutOwnsDataInput {
+  auth0Id: ID
+  avatar: String
+  email: String
+  name: String
+  superuser: Boolean
+  clients: ClientUpdateManyInput
+  enabledProjects: ProjectUpdateManyInput
+  enabledWebsites: WebsiteUpdateManyInput
+  roles: RoleUpdateManyInput
+  projectRoles: UserProjectRolesUpdateManyWithoutUserInput
+  websiteRoles: UserWebsiteRolesUpdateManyWithoutUserInput
+}
+
+input UserUpdateWithWhereUniqueWithoutOwnsInput {
+  where: UserWhereUniqueInput!
+  data: UserUpdateWithoutOwnsDataInput!
+}
+
+input UserUpsertWithWhereUniqueWithoutOwnsInput {
+  where: UserWhereUniqueInput!
+  update: UserUpdateWithoutOwnsDataInput!
+  create: UserCreateWithoutOwnsInput!
+}
+
+type UserWebsiteRoles {
+  user: User!
+  client: Client!
+  project: Project!
+  website: Website!
+  roles(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Role!]
+}
+
+"""A connection to a list of items."""
+type UserWebsiteRolesConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [UserWebsiteRolesEdge]!
+  aggregate: AggregateUserWebsiteRoles!
+}
+
+input UserWebsiteRolesCreateInput {
+  user: UserCreateOneWithoutWebsiteRolesInput!
+  client: ClientCreateOneInput!
+  project: ProjectCreateOneInput!
+  website: WebsiteCreateOneInput!
+  roles: RoleCreateManyInput
+}
+
+input UserWebsiteRolesCreateManyWithoutUserInput {
+  create: [UserWebsiteRolesCreateWithoutUserInput!]
+}
+
+input UserWebsiteRolesCreateWithoutUserInput {
+  client: ClientCreateOneInput!
+  project: ProjectCreateOneInput!
+  website: WebsiteCreateOneInput!
+  roles: RoleCreateManyInput
+}
+
+"""An edge in a connection."""
+type UserWebsiteRolesEdge {
+  """The item at the end of the edge."""
+  node: UserWebsiteRoles!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum UserWebsiteRolesOrderByInput {
+  id_ASC
+  id_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type UserWebsiteRolesSubscriptionPayload {
+  mutation: MutationType!
+  node: UserWebsiteRoles
+  updatedFields: [String!]
+}
+
+input UserWebsiteRolesSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [UserWebsiteRolesSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [UserWebsiteRolesSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [UserWebsiteRolesSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: UserWebsiteRolesWhereInput
+}
+
+input UserWebsiteRolesUpdateManyWithoutUserInput {
+  create: [UserWebsiteRolesCreateWithoutUserInput!]
+}
+
+input UserWebsiteRolesWhereInput {
+  """Logical AND on all given filters."""
+  AND: [UserWebsiteRolesWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [UserWebsiteRolesWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [UserWebsiteRolesWhereInput!]
+  user: UserWhereInput
+  client: ClientWhereInput
+  project: ProjectWhereInput
+  website: WebsiteWhereInput
+  roles_every: RoleWhereInput
+  roles_some: RoleWhereInput
+  roles_none: RoleWhereInput
+}
+
+input UserWhereInput {
+  """Logical AND on all given filters."""
+  AND: [UserWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [UserWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [UserWhereInput!]
+  auth0Id: ID
+
+  """All values that are not equal to given value."""
+  auth0Id_not: ID
+
+  """All values that are contained in given list."""
+  auth0Id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  auth0Id_not_in: [ID!]
+
+  """All values less than the given value."""
+  auth0Id_lt: ID
+
+  """All values less than or equal the given value."""
+  auth0Id_lte: ID
+
+  """All values greater than the given value."""
+  auth0Id_gt: ID
+
+  """All values greater than or equal the given value."""
+  auth0Id_gte: ID
+
+  """All values containing the given string."""
+  auth0Id_contains: ID
+
+  """All values not containing the given string."""
+  auth0Id_not_contains: ID
+
+  """All values starting with the given string."""
+  auth0Id_starts_with: ID
+
+  """All values not starting with the given string."""
+  auth0Id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  auth0Id_ends_with: ID
+
+  """All values not ending with the given string."""
+  auth0Id_not_ends_with: ID
+  avatar: String
+
+  """All values that are not equal to given value."""
+  avatar_not: String
+
+  """All values that are contained in given list."""
+  avatar_in: [String!]
+
+  """All values that are not contained in given list."""
+  avatar_not_in: [String!]
+
+  """All values less than the given value."""
+  avatar_lt: String
+
+  """All values less than or equal the given value."""
+  avatar_lte: String
+
+  """All values greater than the given value."""
+  avatar_gt: String
+
+  """All values greater than or equal the given value."""
+  avatar_gte: String
+
+  """All values containing the given string."""
+  avatar_contains: String
+
+  """All values not containing the given string."""
+  avatar_not_contains: String
+
+  """All values starting with the given string."""
+  avatar_starts_with: String
+
+  """All values not starting with the given string."""
+  avatar_not_starts_with: String
+
+  """All values ending with the given string."""
+  avatar_ends_with: String
+
+  """All values not ending with the given string."""
+  avatar_not_ends_with: String
+  email: String
+
+  """All values that are not equal to given value."""
+  email_not: String
+
+  """All values that are contained in given list."""
+  email_in: [String!]
+
+  """All values that are not contained in given list."""
+  email_not_in: [String!]
+
+  """All values less than the given value."""
+  email_lt: String
+
+  """All values less than or equal the given value."""
+  email_lte: String
+
+  """All values greater than the given value."""
+  email_gt: String
+
+  """All values greater than or equal the given value."""
+  email_gte: String
+
+  """All values containing the given string."""
+  email_contains: String
+
+  """All values not containing the given string."""
+  email_not_contains: String
+
+  """All values starting with the given string."""
+  email_starts_with: String
+
+  """All values not starting with the given string."""
+  email_not_starts_with: String
+
+  """All values ending with the given string."""
+  email_ends_with: String
+
+  """All values not ending with the given string."""
+  email_not_ends_with: String
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  superuser: Boolean
+
+  """All values that are not equal to given value."""
+  superuser_not: Boolean
+  clients_every: ClientWhereInput
+  clients_some: ClientWhereInput
+  clients_none: ClientWhereInput
+  enabledProjects_every: ProjectWhereInput
+  enabledProjects_some: ProjectWhereInput
+  enabledProjects_none: ProjectWhereInput
+  enabledWebsites_every: WebsiteWhereInput
+  enabledWebsites_some: WebsiteWhereInput
+  enabledWebsites_none: WebsiteWhereInput
+  owns_every: ClientWhereInput
+  owns_some: ClientWhereInput
+  owns_none: ClientWhereInput
+  roles_every: RoleWhereInput
+  roles_some: RoleWhereInput
+  roles_none: RoleWhereInput
+  projectRoles_every: UserProjectRolesWhereInput
+  projectRoles_some: UserProjectRolesWhereInput
+  projectRoles_none: UserProjectRolesWhereInput
+  websiteRoles_every: UserWebsiteRolesWhereInput
+  websiteRoles_some: UserWebsiteRolesWhereInput
+  websiteRoles_none: UserWebsiteRolesWhereInput
+}
+
 input UserWhereUniqueInput {
+  auth0Id: ID
+  id: ID
+}
+
+type Website implements Node {
+  foxer360Id: ID!
+  id: ID!
+  name: String!
+  client: Client!
+  project: Project!
+}
+
+"""A connection to a list of items."""
+type WebsiteConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [WebsiteEdge]!
+  aggregate: AggregateWebsite!
+}
+
+input WebsiteCreateInput {
+  foxer360Id: ID!
+  name: String!
+  client: ClientCreateOneWithoutWebsitesInput!
+  project: ProjectCreateOneWithoutWebsitesInput!
+}
+
+input WebsiteCreateManyInput {
+  create: [WebsiteCreateInput!]
+  connect: [WebsiteWhereUniqueInput!]
+}
+
+input WebsiteCreateManyWithoutClientInput {
+  create: [WebsiteCreateWithoutClientInput!]
+  connect: [WebsiteWhereUniqueInput!]
+}
+
+input WebsiteCreateManyWithoutProjectInput {
+  create: [WebsiteCreateWithoutProjectInput!]
+  connect: [WebsiteWhereUniqueInput!]
+}
+
+input WebsiteCreateOneInput {
+  create: WebsiteCreateInput
+  connect: WebsiteWhereUniqueInput
+}
+
+input WebsiteCreateWithoutClientInput {
+  foxer360Id: ID!
+  name: String!
+  project: ProjectCreateOneWithoutWebsitesInput!
+}
+
+input WebsiteCreateWithoutProjectInput {
+  foxer360Id: ID!
+  name: String!
+  client: ClientCreateOneWithoutWebsitesInput!
+}
+
+"""An edge in a connection."""
+type WebsiteEdge {
+  """The item at the end of the edge."""
+  node: Website!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum WebsiteOrderByInput {
+  foxer360Id_ASC
+  foxer360Id_DESC
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type WebsitePreviousValues {
+  foxer360Id: ID!
+  id: ID!
+  name: String!
+}
+
+input WebsiteScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [WebsiteScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [WebsiteScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [WebsiteScalarWhereInput!]
+  foxer360Id: ID
+
+  """All values that are not equal to given value."""
+  foxer360Id_not: ID
+
+  """All values that are contained in given list."""
+  foxer360Id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  foxer360Id_not_in: [ID!]
+
+  """All values less than the given value."""
+  foxer360Id_lt: ID
+
+  """All values less than or equal the given value."""
+  foxer360Id_lte: ID
+
+  """All values greater than the given value."""
+  foxer360Id_gt: ID
+
+  """All values greater than or equal the given value."""
+  foxer360Id_gte: ID
+
+  """All values containing the given string."""
+  foxer360Id_contains: ID
+
+  """All values not containing the given string."""
+  foxer360Id_not_contains: ID
+
+  """All values starting with the given string."""
+  foxer360Id_starts_with: ID
+
+  """All values not starting with the given string."""
+  foxer360Id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  foxer360Id_ends_with: ID
+
+  """All values not ending with the given string."""
+  foxer360Id_not_ends_with: ID
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+}
+
+type WebsiteSubscriptionPayload {
+  mutation: MutationType!
+  node: Website
+  updatedFields: [String!]
+  previousValues: WebsitePreviousValues
+}
+
+input WebsiteSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [WebsiteSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [WebsiteSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [WebsiteSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: WebsiteWhereInput
+}
+
+input WebsiteUpdateDataInput {
+  foxer360Id: ID
+  name: String
+  client: ClientUpdateOneRequiredWithoutWebsitesInput
+  project: ProjectUpdateOneRequiredWithoutWebsitesInput
+}
+
+input WebsiteUpdateInput {
+  foxer360Id: ID
+  name: String
+  client: ClientUpdateOneRequiredWithoutWebsitesInput
+  project: ProjectUpdateOneRequiredWithoutWebsitesInput
+}
+
+input WebsiteUpdateManyDataInput {
+  foxer360Id: ID
+  name: String
+}
+
+input WebsiteUpdateManyInput {
+  create: [WebsiteCreateInput!]
+  connect: [WebsiteWhereUniqueInput!]
+  set: [WebsiteWhereUniqueInput!]
+  disconnect: [WebsiteWhereUniqueInput!]
+  delete: [WebsiteWhereUniqueInput!]
+  update: [WebsiteUpdateWithWhereUniqueNestedInput!]
+  updateMany: [WebsiteUpdateManyWithWhereNestedInput!]
+  deleteMany: [WebsiteScalarWhereInput!]
+  upsert: [WebsiteUpsertWithWhereUniqueNestedInput!]
+}
+
+input WebsiteUpdateManyMutationInput {
+  foxer360Id: ID
+  name: String
+}
+
+input WebsiteUpdateManyWithoutClientInput {
+  create: [WebsiteCreateWithoutClientInput!]
+  connect: [WebsiteWhereUniqueInput!]
+  set: [WebsiteWhereUniqueInput!]
+  disconnect: [WebsiteWhereUniqueInput!]
+  delete: [WebsiteWhereUniqueInput!]
+  update: [WebsiteUpdateWithWhereUniqueWithoutClientInput!]
+  updateMany: [WebsiteUpdateManyWithWhereNestedInput!]
+  deleteMany: [WebsiteScalarWhereInput!]
+  upsert: [WebsiteUpsertWithWhereUniqueWithoutClientInput!]
+}
+
+input WebsiteUpdateManyWithoutProjectInput {
+  create: [WebsiteCreateWithoutProjectInput!]
+  connect: [WebsiteWhereUniqueInput!]
+  set: [WebsiteWhereUniqueInput!]
+  disconnect: [WebsiteWhereUniqueInput!]
+  delete: [WebsiteWhereUniqueInput!]
+  update: [WebsiteUpdateWithWhereUniqueWithoutProjectInput!]
+  updateMany: [WebsiteUpdateManyWithWhereNestedInput!]
+  deleteMany: [WebsiteScalarWhereInput!]
+  upsert: [WebsiteUpsertWithWhereUniqueWithoutProjectInput!]
+}
+
+input WebsiteUpdateManyWithWhereNestedInput {
+  where: WebsiteScalarWhereInput!
+  data: WebsiteUpdateManyDataInput!
+}
+
+input WebsiteUpdateWithoutClientDataInput {
+  foxer360Id: ID
+  name: String
+  project: ProjectUpdateOneRequiredWithoutWebsitesInput
+}
+
+input WebsiteUpdateWithoutProjectDataInput {
+  foxer360Id: ID
+  name: String
+  client: ClientUpdateOneRequiredWithoutWebsitesInput
+}
+
+input WebsiteUpdateWithWhereUniqueNestedInput {
+  where: WebsiteWhereUniqueInput!
+  data: WebsiteUpdateDataInput!
+}
+
+input WebsiteUpdateWithWhereUniqueWithoutClientInput {
+  where: WebsiteWhereUniqueInput!
+  data: WebsiteUpdateWithoutClientDataInput!
+}
+
+input WebsiteUpdateWithWhereUniqueWithoutProjectInput {
+  where: WebsiteWhereUniqueInput!
+  data: WebsiteUpdateWithoutProjectDataInput!
+}
+
+input WebsiteUpsertWithWhereUniqueNestedInput {
+  where: WebsiteWhereUniqueInput!
+  update: WebsiteUpdateDataInput!
+  create: WebsiteCreateInput!
+}
+
+input WebsiteUpsertWithWhereUniqueWithoutClientInput {
+  where: WebsiteWhereUniqueInput!
+  update: WebsiteUpdateWithoutClientDataInput!
+  create: WebsiteCreateWithoutClientInput!
+}
+
+input WebsiteUpsertWithWhereUniqueWithoutProjectInput {
+  where: WebsiteWhereUniqueInput!
+  update: WebsiteUpdateWithoutProjectDataInput!
+  create: WebsiteCreateWithoutProjectInput!
+}
+
+input WebsiteWhereInput {
+  """Logical AND on all given filters."""
+  AND: [WebsiteWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [WebsiteWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [WebsiteWhereInput!]
+  foxer360Id: ID
+
+  """All values that are not equal to given value."""
+  foxer360Id_not: ID
+
+  """All values that are contained in given list."""
+  foxer360Id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  foxer360Id_not_in: [ID!]
+
+  """All values less than the given value."""
+  foxer360Id_lt: ID
+
+  """All values less than or equal the given value."""
+  foxer360Id_lte: ID
+
+  """All values greater than the given value."""
+  foxer360Id_gt: ID
+
+  """All values greater than or equal the given value."""
+  foxer360Id_gte: ID
+
+  """All values containing the given string."""
+  foxer360Id_contains: ID
+
+  """All values not containing the given string."""
+  foxer360Id_not_contains: ID
+
+  """All values starting with the given string."""
+  foxer360Id_starts_with: ID
+
+  """All values not starting with the given string."""
+  foxer360Id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  foxer360Id_ends_with: ID
+
+  """All values not ending with the given string."""
+  foxer360Id_not_ends_with: ID
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  client: ClientWhereInput
+  project: ProjectWhereInput
+}
+
+input WebsiteWhereUniqueInput {
+  foxer360Id: ID
   id: ID
 }

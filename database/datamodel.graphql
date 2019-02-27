@@ -1,4 +1,102 @@
-type User {
+# Actions are elements of privileges.
+type Action {
+  id: ID! @unique
+  name: String! @unique
+  description: String
+}
+
+# Whole system is divided into clients. Client is something like namespace,
+# which has users and roles. Also Foxer360 system is registered for client, so
+# you need to create client in Auth system to get working Foxer360 system.
+# Projects and Websites, which are configured in Foxer360 are also
+# synchronized with Auth and then roles for users can be different in
+# different projects or websites.
+type Client {
+  # Basic informations
   id: ID! @unique
   name: String!
+
+  # Relations
+  projects: [Project!]! @relation(name: "ProjectUnderClient", onDelete: CASCADE)
+  roles: [Role!]! @relation(name: "RoleUnderClient", onDelete: CASCADE)
+  websites: [Website!]! @relation(name: "WebsiteUnderClient", onDelete: CASCADE)
+  owners: [User!]! @relation(name: "OwnerOfClient") # Owner can manage roles and users
+
+  # Configuration of client
+  secret: String @unique
+}
+
+# Each client has own set of roles. Role define actions, which are allowed in
+# this role. The role name have to be unique for client.
+type Role {
+  # Basic information
+  id: ID! @unique
+  name: String!
+
+  # Relations
+  actions: [Action!]! @relation(name: "ActionUnderRole")
+  client: Client! @relation(name: "RoleUnderClient")
+}
+
+# Synchronized information about project from Foxer360 system.
+type Project {
+  # Basic informations
+  foxer360Id: ID! @unique # ID in Foxer360 system, for sync purposes
+  id: ID! @unique
+  name: String!
+
+  # Relations
+  client: Client! @relation(name: "ProjectUnderClient")
+  websites: [Website!]! @relation(name: "WebsiteUnderProject", onDelete: CASCADE)
+}
+
+# Synchronized information about website from Foxer360 system.
+type Website {
+  # Basic informations
+  foxer360Id: ID! @unique # ID in Foxer360 system, for sync purposes
+  id: ID! @unique
+  name: String!
+
+  # Relations
+  client: Client! @relation(name: "WebsiteUnderClient")
+  project: Project! @relation(name: "WebsiteUnderProject")
+}
+
+# User definition
+type User {
+  # Basic informations
+  auth0Id: ID! @unique
+  avatar: String
+  email: String!
+  id: ID! @unique
+  name: String!
+
+  # Relations
+  clients: [Client!]! @relation(name: "UserUnderClient")
+  enabledProjects: [Project!]! @relation(name: "EnabledProjectUnderUser")
+  enabledWebsites: [Website!]! @relation(name: "EnabledWebsiteUnderUser")
+  owns: [Client!]! @relation(name: "OwnerOfClient")
+  roles: [Role!]! @relation(name: "UserHasRole")
+  projectRoles: [UserProjectRoles!]! @relation(name: "UserHasProjectRole", onDelete: CASCADE)
+  websiteRoles: [UserWebsiteRoles!]! @relation(name: "UserHasWebsiteRole", onDelete: CASCADE)
+
+  # Configuration
+  superuser: Boolean! @default(value: "false")
+}
+
+# Define specific user roles for given project
+type UserProjectRoles {
+  user: User! @relation(name: "UserHasProjectRole")
+  client: Client!
+  project: Project!
+  roles: [Role!]!
+}
+
+# Define specific user roles for given website
+type UserWebsiteRoles {
+  user: User! @relation(name: "UserHasWebsiteRole")
+  client: Client!
+  project: Project!
+  website: Website!
+  roles: [Role!]!
 }
