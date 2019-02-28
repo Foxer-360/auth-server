@@ -9,6 +9,7 @@ import { ServerService } from './server.service';
 @Module({
   controllers: [ServerController],
   imports: [GraphQLModule, GraphQL.forRoot({
+    installSubscriptionHandlers: true,
     path: '/graphql',
     playground: true,
     typePaths: getGraphQLSchemas(),
