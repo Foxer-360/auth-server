@@ -1,6 +1,6 @@
 {
   "name": "@foxer360/auth-server",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Authorization server for the Foxer360 system.",
   "main": "src/index.ts",
   "repository": "git@github.com:Foxer-360/auth-server.git",
@@ -23,7 +23,7 @@
     "dotenv": "^6.2.0",
     "graphql": "^14.1.1",
     "graphql-tools": "^4.0.4",
-    "prisma": "^1.27.1",
+    "prisma": "^1.30.0-beta.3",
     "prisma-binding": "^2.3.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.4.0"

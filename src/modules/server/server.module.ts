@@ -1,19 +1,14 @@
 import { Module } from '@nestjs/common';
-import { GraphQLModule as GraphQL } from '@nestjs/graphql';
 
-import { GraphQLModule } from '@source/modules/graphql/graphql.module';
-import { getGraphQLSchemas } from '@source/utils';
+import { ApiModule } from '@source/modules/api/api.module';
+import { DashboardModule } from '@source/modules/dashboard/dashboard.module';
 import { ServerController } from './server.controller';
 import { ServerService } from './server.service';
 
+
 @Module({
   controllers: [ServerController],
-  imports: [GraphQLModule, GraphQL.forRoot({
-    installSubscriptionHandlers: true,
-    path: '/graphql',
-    playground: true,
-    typePaths: getGraphQLSchemas(),
-  })],
+  imports: [ApiModule, DashboardModule],
   providers: [ServerService],
 })
 export class ServerModule {};

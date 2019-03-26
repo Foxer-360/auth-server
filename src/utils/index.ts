@@ -1,7 +1,9 @@
 import { config } from 'dotenv';
 import { existsSync } from 'fs';
 import * as path from 'path';
+
 import { Colors } from './colors';
+
 
 /**
  * Simple function to get path to .env file. There are only two options. First
@@ -40,21 +42,9 @@ const loadEnvConfig = () => {
   config({ path: envPath });
 }
 
-const getGraphQLSchemas = () => {
-  // Generated schema from Prisma
-  const prisma = path.resolve(__dirname, '../generated/prisma.graphql');
-  // Custom schema
-  // const custom = path.resolve(__dirname, '../modules/graphql/schema/schema.graphql');
-
-  return [
-    // custom,
-    prisma,
-  ];
-};
 
 export {
   Colors,
   getEnvFilePath,
-  getGraphQLSchemas,
   loadEnvConfig,
 };
