@@ -1,8 +1,17 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
+import * as jwt from 'jsonwebtoken';
+import { JwksClient } from 'jwks-rsa';
+
+import { Colors, getSigningPublicKey, loadEnvConfig, readEnvironmentVariable } from '@source/utils';
+
+// Load config from .env
+loadEnvConfig();
 
 @Injectable()
 export class AuthGuard implements CanActivate {
+
+  constructor(@Inject('JwksClient') private readonly client: JwksClient) {}
 
   public canActivate(context: ExecutionContext): boolean | Promise<boolean> {
     const ctx = GqlExecutionContext.create(context).getContext();
@@ -16,11 +25,31 @@ export class AuthGuard implements CanActivate {
       return false;
     }
 
-    // Check if we have access_token in our chache
-    // If yes, check expiration
-    // If not, check access_token and then expiration
+    const accessToken = match[1];
 
-    return true;
+    // Verify env properties
+    const audience = readEnvironmentVariable('auth0_audience');
+
+    // Verify JWT access token
+    const options = {
+      algorithms: ['RS256'],
+      audience,
+    };
+
+    return new Promise((resolve) => {
+      jwt.verify(accessToken, getSigningPublicKey(this.client), options, (err, decode) => {
+        if (err) {
+          const prefix = Colors.red(Colors.bright('[Auth Error]'));
+          const msg = Colors.red(err.toString());
+          // tslint:disable-next-line:no-console
+          console.log(`${prefix} ${msg}`);
+
+          return resolve(false);
+        }
+
+        return resolve(true);
+      });
+    });
   }
 
 }

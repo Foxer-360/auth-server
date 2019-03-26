@@ -2,6 +2,8 @@ import { config } from 'dotenv';
 import { existsSync } from 'fs';
 import * as path from 'path';
 
+import { EnvironmentException } from '@source/common/exceptions/environment.exception';
+import { getSigningPublicKey } from './auth';
 import { Colors } from './colors';
 
 
@@ -42,9 +44,62 @@ const loadEnvConfig = () => {
   config({ path: envPath });
 }
 
+/**
+ * Check if environment variable is defined in .env file, if not throw error.
+ *
+ * @param {string} name of variable (can be lower case, automatically convert
+ *                      to upper case)
+ * @return {boolean}
+ */
+const checkEnvironmentVariable = (name: string): boolean => {
+  name = name.toUpperCase();
+
+  if (!process.env[name] || process.env[name] === undefined || process.env[name] === null) {
+    const prefix = Colors.red('You need to specify');
+    const envName = Colors.red(Colors.bright(name));
+    const postfix = Colors.red('in environment!');
+    // tslint:disable-next-line:no-console
+    console.log(`${prefix} ${envName} ${postfix}`);
+
+    throw new EnvironmentException(name);
+    return false;
+  }
+
+  if ((process.env[name] as string).length < 1) {
+    const prefix = Colors.red('Environment variable');
+    const envName = Colors.red(Colors.bright(name));
+    const postfix = Colors.red('is defined, but its empty!');
+    // tslint:disable-next-line:no-console
+    console.log(`${prefix} ${envName} ${postfix}`);
+
+    throw new EnvironmentException(name);
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * Read environment variable defined in .env file. If it's not defined, throw
+ * error.
+ *
+ * @param {string} naem of variable (can be lower case, automatically convert
+ *                      to upper case)
+ * @return {string} value
+ */
+const readEnvironmentVariable = (name: string): string => {
+  name = name.toUpperCase();
+  checkEnvironmentVariable(name);
+
+  return process.env[name] as string;
+};
+
 
 export {
   Colors,
+  checkEnvironmentVariable,
   getEnvFilePath,
+  getSigningPublicKey,
   loadEnvConfig,
+  readEnvironmentVariable,
 };

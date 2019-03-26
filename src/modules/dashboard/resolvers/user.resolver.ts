@@ -5,12 +5,12 @@ import { AuthGuard } from '@source/common/guards/auth.guard';
 import { Prisma } from '@source/generated/prisma';
 
 @Resolver('user')
+@UseGuards(AuthGuard)
 export class UserResolver {
 
   constructor(private readonly prisma: Prisma) {}
 
   @Query('user')
-  @UseGuards(AuthGuard)
   public async getUser(root: any, args: any, ctx: any, info: any): Promise<any | null> {
     // tslint:disable-next-line:no-console
     console.log('Called user Query...');
