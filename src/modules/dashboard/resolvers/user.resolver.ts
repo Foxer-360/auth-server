@@ -19,6 +19,13 @@ interface IActingUserInfo {
   superuser: boolean;
 }
 
+interface ISimpleUserInfo {
+  id: string;
+  clients: string[];
+  owns: string[];
+  superuser: boolean;
+}
+
 
 @Resolver('user')
 @UseGuards(AuthGuard)
@@ -28,7 +35,7 @@ export class UserResolver {
     private readonly auth0Service: Auth0Service) {}
 
   @Query('user')
-  public async getUser(root: any, args: any, ctx: any, info: any): Promise<any | null> {
+  public async getUser(root: any, args: any, ctx: any, info: any): Promise<User | null> {
     const { where } = args;
     if (!where) {
       // Empty where, we cannot find the user
@@ -44,51 +51,61 @@ export class UserResolver {
       delete where.accessToken;
     }
 
-    // Get users from prisma
-    this.injectClientsIntoInfo(info);
-    this.injectSuperuserIntoInfo(info);
-
-    const users = await this.prisma.query.users({ where }, info) as User[];
-    if (!users || users.length < 1 || !users[0] || users[0] === null || users[0] === undefined) {
-      return Promise.resolve(null);
-    }
-    const user = users[0] as User;
-
-    // Get info about the acting user and verify permissions to get this user.
-    const actingUser = await this.getActingUserInfo(ctx);
-    if (!actingUser) {
-      // No user info, no permission
+    // Just call getUsers to obtain users
+    const users = await this.getUsers(root, { ...args, where }, ctx, info);
+    if (!users || users.length < 1) {
       return Promise.resolve(null);
     }
 
-    if (actingUser.superuser) {
-      return Promise.resolve(user);
-    }
-
-    if (user.superuser) {
-      // Superuser can be read only with superuser
-      return Promise.resolve(null);
-    }
-
-    if (!user.clients || user.clients.length < 1) {
-      // No clients assigned, can be read by anyone
-      return Promise.resolve(user);
-    }
-
-    const findCommonClient = user.clients.find((c) => {
-      return actingUser.clients.includes(c.id)
-    });
-    if (!findCommonClient) {
-      // No common client, no permission to read
-      return Promise.resolve(null);
-    }
-
-    return Promise.resolve(user);
+    return Promise.resolve(users[0]);
   }
 
   @Query('users')
-  public async getUsers(root: any, args: any, ctx: any, info: any): Promise<any[]> {
-    return Promise.resolve([]);
+  public async getUsers(root: any, args: any, ctx: any, info: any): Promise<User[]> {
+    const actingUser = await this.getActingUserInfo(ctx);
+    if (!actingUser) {
+      return Promise.resolve([]);
+    }
+
+    if (actingUser.superuser) {
+      // If superuser, we do not need to filter permissions to read users
+      return this.prisma.query.users(args, info);
+    }
+
+    const prismaInfo = `{ id clients { id } owns { id } superuser }`;
+    const users = await this.prisma.query.users(args, prismaInfo);
+    if (!users || users.length < 1) {
+      return Promise.resolve([]);
+    }
+
+    const userIds = users.map((u) => {
+      if (!u || !u.clients || !u.owns) {
+        return null;
+      }
+
+      const usr = {
+        clients: u.clients.map((c) => c.id),
+        id: u.id,
+        owns: u.owns.map((o) => o.id),
+        superuser: u.superuser,
+      } as ISimpleUserInfo;
+
+      if (this.canActingUserSeeUser(actingUser, usr)) {
+        return usr.id;
+      }
+
+      return null;
+    }).filter((id) => id !== null);
+
+    if (userIds.length < 1) {
+      return Promise.resolve([]);
+    }
+
+    const where = {
+      id_in: userIds,
+    };
+
+    return this.prisma.query.users({ ...args, where }, info);
   }
 
   @Mutation('createUser')
@@ -114,6 +131,27 @@ export class UserResolver {
   @Mutation('updateUser')
   public async updateUser(root: any, args: any, ctx: any, info: any): Promise<any | null> {
     return Promise.resolve(null);
+  }
+
+  private canActingUserSeeUser(actingUser: IActingUserInfo, user: ISimpleUserInfo): boolean {
+    if (actingUser.superuser) {
+      return true;
+    }
+
+    if (user.superuser) {
+      return false;
+    }
+
+    if (!user.clients || user.clients.length < 1) {
+      return true;
+    }
+
+    const found = user.clients.find((id) => actingUser.clients.includes(id));
+    if (found) {
+      return true;
+    }
+
+    return false;
   }
 
   /**
@@ -175,99 +213,6 @@ export class UserResolver {
     user.roles = user.roles.map(mapFce);
 
     return Promise.resolve(user);
-  }
-
-  private getRootSelection(info: any): any {
-    if (!info || !info.fieldNodes[0]) {
-      return null;
-    }
-    if (!info.fieldNodes[0].selectionSet || !info.fieldNodes[0].selectionSet.selections) {
-      return null;
-    }
-
-    return info.fieldNodes[0].selectionSet.selections;
-  }
-
-  private createNamedField(name: string, selections?: any[]): any {
-    return {
-      alias: undefined,
-      arguments: [],
-      directives: [],
-      kind: 'Field',
-      name: { kind: 'Name', value: name },
-      selectionSet: selections ? {
-        kind: 'SelectionSet',
-        selections: selections ? selections : []
-      } : undefined,
-    };
-  }
-
-  /**
-   * Helper which inject clients info with id into parsed GraphQL info set.
-   * This helper has strong assumption of structure of info object parsed
-   * by GraphQL server.
-   *
-   * @param {any} info from request
-   */
-  private injectClientsIntoInfo(info: any): boolean {
-    const rootSelection = this.getRootSelection(info);
-    if (!rootSelection) { return false; }
-
-    const findClients = rootSelection.find((s: any) => {
-      if (!s || !s.name || !s.name.value) { return false; }
-      if (s.name.value === 'clients') { return true; }
-
-      return false;
-    });
-
-    if (!findClients) {
-      rootSelection.push(this.createNamedField('clients', [
-          this.createNamedField('id')
-        ]));
-
-      return true;
-    }
-
-    const clients = findClients.selectionSet.selections;
-    const findId = clients.find((s: any) => {
-      if (!s || !s.name || !s.name.value) { return false; }
-      if (s.name.value === 'id') { return true; }
-
-      return false;
-    });
-
-    if (!findId) {
-      clients.push(this.createNamedField('id'));
-      return true;
-    }
-
-    return false;
-  }
-
-  /**
-   * Helper which inject superuser info into parsed GraphQL info set.
-   * This helper has strong assumption of structure of info object parsed
-   * by GraphQL server.
-   *
-   * @param {any} info from request
-   */
-  private injectSuperuserIntoInfo(info: any): boolean {
-    const rootSelection = this.getRootSelection(info);
-    if (!rootSelection) { return false; }
-
-    const findSuperuser = rootSelection.find((s: any) => {
-      if (!s || !s.name || !s.name.value) { return false; }
-      if (s.name.value === 'superuser') { return true; }
-
-      return false;
-    });
-
-    if (!findSuperuser) {
-      rootSelection.push(this.createNamedField('superuser'));
-      return true;
-    }
-
-    return false;
   }
 
   private getAuth0IdFromAccessToken(token: string): string | null {
