@@ -12,11 +12,10 @@ interface IActingUserInfo {
   email: string;
   id: string;
   clients: string[];
-  enabledProjects: string[];
-  enabledWebsites: string[];
   owns: string[];
-  roles: string[];
   superuser: boolean;
+  projects?: string[];
+  websites?: string[];
 }
 
 interface ISimpleUserInfo {
@@ -125,22 +124,192 @@ export class UserResolver {
 
   @Mutation('createUser')
   public async createUser(root: any, args: any, ctx: any, info: any): Promise<User | null> {
-    // If user with given email exists, do not create
+    const actingUser = await this.getActingUserInfo(ctx, true);
+    if (!actingUser) {
+      return Promise.resolve(null);
+    }
 
-    // If user with given email exists, but empty auth0Id, obtain auth0Id by
-    // creating or fetching user from Auth0 and add this auth0Id to user with given email
+    const prismaInfo = `{ id auth0Id avatar clients { id } owns { id } superuser }`;
+    const users = await this.prisma.query.users({ where: { email: args.data.email } }, prismaInfo);
 
-    // Create new user in Auth0 and get auth0Id
+    // Do a lot of things, if user exists
+    if (users && users.length > 0) {
+      const user = users[0] as User;
+      if (!user.clients) {
+        user.clients = [];
+      }
+      if (!user.owns) {
+        user.owns = [];
+      }
 
-    // If user with email exists in Auth0, just get auth0Id
+      const usr = {
+        clients: user.clients.map((c) => c.id),
+        id: user.id,
+        owns: user.owns.map((o) => o.id),
+        superuser: user.superuser,
+      } as ISimpleUserInfo;
 
-    // If superuser, check that creator user is also superuser otherwise set superuser to false
+      const canSee = this.canActingUserSeeUser(actingUser, usr);
 
-    // Filter clients only to clients which creator user owns
+      if (user.auth0Id && user.auth0Id.length > 0) {
+        if (canSee) {
+          // tslint:disable-next-line:no-shadowed-variable
+          const fullUser = await this.prisma.query.user({ where: { id: usr.id } }, info) as User;
 
-    // Filter owns only to clients which creator user owns
+          if (!actingUser.superuser && fullUser.auth0Id) { fullUser.auth0Id = 'You have no permission to read this property' };
+          return fullUser;
+        } else {
+          return Promise.resolve(null);
+        }
+      }
 
-    return Promise.resolve(null);
+      // No auth0Id assigned with existing user, so assign or create auth0 user
+      // tslint:disable-next-line:no-shadowed-variable
+      let auth0User = await this.auth0Service.getUserByEmail(args.data.email);
+      if (auth0User) {
+        // Assign auth0Id
+        // tslint:disable-next-line:no-shadowed-variable
+        const auth0Id = this.auth0Service.getUserId(auth0User.user_id);
+        if (!auth0Id) {
+          if (canSee) {
+            // tslint:disable-next-line:no-shadowed-variable
+            const fullUser = await this.prisma.query.user({ where: { id: usr.id } }, info) as User;
+
+            if (!actingUser.superuser && fullUser.auth0Id) { fullUser.auth0Id = 'You have no permission to read this property' };
+            return fullUser;
+          } else {
+            return Promise.resolve(null);
+          }
+        }
+
+        // tslint:disable-next-line:no-shadowed-variable
+        const fullUser = await this.prisma.mutation.updateUser({ where: { id: usr.id }, data: { auth0Id } }, info) as User;
+        if (!actingUser.superuser && fullUser.auth0Id) { fullUser.auth0Id = 'You have no permission to read this property' };
+
+        if (canSee) {
+          return fullUser;
+        }
+
+        return Promise.resolve(null);
+      }
+
+      // Creating of new auth0 user only if we can see existing user
+      if (!canSee) {
+        return Promise.resolve(null);
+      }
+
+      let picture = user.avatar as string;
+      if (!picture || picture.length < 1) {
+        if (args.data.avatar) {
+          picture = args.data.avatar as string;
+        }
+      }
+      auth0User = await this.auth0Service.createUser({
+        email: args.data.email,
+        name: user.name,
+        password: args.data.password,
+        picture,
+      });
+      if (!auth0User) {
+        return Promise.resolve(null);
+      }
+
+      // tslint:disable-next-line:no-shadowed-variable
+      const auth0Id = this.auth0Service.getUserId(auth0User.user_id);
+      if (!auth0Id) {
+        return Promise.resolve(null);
+      }
+      const fullUser = await this.prisma.mutation.updateUser({ where: { id: usr.id }, data: { auth0Id } }, info) as User;
+      if (!actingUser.superuser && fullUser.auth0Id) { fullUser.auth0Id = 'You have no permission to read this property' };
+
+      return fullUser;
+    }
+
+    // First, create or get auth0 user
+    let auth0User = await this.auth0Service.getUserByEmail(args.data.email);
+    if (!auth0User) {
+      auth0User = await this.auth0Service.createUser({
+        email: args.data.email,
+        name: args.data.name ? args.data.name : args.data.email,
+        password: args.data.password,
+        picture: args.data.avatar ? args.data.avatar : '',
+      });
+
+      if (!auth0User) {
+        // Something is totally wrong
+        return Promise.resolve(null);
+      }
+    }
+
+    const auth0Id = this.auth0Service.getUserId(auth0User.user_id);
+    if (!auth0Id) {
+      // Something is totally wrong
+      return Promise.resolve(null);
+    }
+
+    // Now create user in db
+    if (!actingUser.superuser) {
+      args.data.superuser = false;
+
+      // Filter all clients, websites and projects
+      if (args.data.clients) {
+        args.data.clients = this.getIdsIntersection(actingUser.owns, args.data.clients);
+      }
+      if (args.data.owns) {
+        args.data.owns = this.getIdsIntersection(actingUser.owns, args.data.owns);
+      }
+      if (args.data.enabledProjects) {
+        args.data.enabledProjects = this.getIdsIntersection(actingUser.projects as string[], args.data.enabledProjects);
+      }
+      if (args.data.enabledWebsites) {
+        args.data.enabledWebsites = this.getIdsIntersection(actingUser.websites as string[], args.data.enabledWebsites);
+      }
+    }
+    delete args.data.password;
+    if (args.data.clients) {
+      args.data.clients = {
+        connect: {
+          id: args.data.clients
+        }
+      };
+    }
+    if (args.data.owns) {
+      args.data.owns = {
+        connect: {
+          id: args.data.owns
+        }
+      };
+    }
+    if (args.data.enabledProjects) {
+      args.data.enabledProjects = {
+        connect: {
+          id: args.data.enabledProjects
+        }
+      };
+    }
+    if (args.data.enabledWebsites) {
+      args.data.enabledWebsites = {
+        connect: {
+          id: args.data.enabledWebsites
+        }
+      };
+    }
+    if (args.data.roles) {
+      args.data.roles = {
+        connect: {
+          id: args.data.roles
+        }
+      };
+    }
+
+    const createdUser = await this.prisma.mutation.createUser({ data: { ...args.data, auth0Id } }, info);
+    if (!createdUser) {
+      return Promise.resolve(null);
+    }
+
+    if (!actingUser.superuser && createdUser.auth0Id) { createdUser.auth0Id = 'You have no permission to read this property' };
+
+    return Promise.resolve(createdUser);
   }
 
   @Mutation('updateUser')
@@ -256,11 +425,60 @@ export class UserResolver {
   }
 
   /**
+   * Simple helper which returns an object with array of added ids in
+   * updated array compare to original array and array of deleted ids in updated
+   * array compare to original array
+   *
+   * @param {string[]} original
+   * @param {string[]} updated
+   * @return {{ add: string[], delete: string[] }}
+   */
+  // private getIdDiffs(original: string[], updated: string[]): { add: string[], delete: string[] } {
+  //   const res = { add: [], delete: [] } as { add: string[], delete: string[] };
+
+  //   original.forEach((oId) => {
+  //     if (!updated.includes(oId)) {
+  //       res.delete.push(oId);
+  //     }
+  //   });
+  //   updated.forEach((uId) => {
+  //     if (!original.includes(uId)) {
+  //       res.add.push(uId);
+  //     }
+  //   });
+
+  //   return res;
+  // }
+
+  /**
+   * Simple helper which return intersection of two arrays of strings (ids)
+   *
+   * @param {string[]} a first array
+   * @param {string[]} b second array
+   * @return {string[]}
+   */
+  private getIdsIntersection(a: string[], b: string[]): string[] {
+    const res = [] as string[];
+
+    a.forEach((id) => {
+      if (b.includes(id)) {
+        res.push(id);
+      }
+    });
+
+    return res;
+  }
+
+  /**
    * Helper, that returns users info of user, who perform query or mutation
    *
    * @param {any} ctx context of request (there have to be headers)
+   * @param {boolean} full? if you want all projects and websites ids
    */
-  private async getActingUserInfo(ctx: any): Promise<IActingUserInfo | null> {
+  private async getActingUserInfo(ctx: any, full?: boolean): Promise<IActingUserInfo | null> {
+    if (typeof full === 'undefined' || full === undefined || full === null) {
+      full = false;
+    }
     if (!ctx || !ctx.headers || !ctx.headers.authorization) {
       return Promise.resolve(null);
     }
@@ -280,11 +498,8 @@ export class UserResolver {
       auth0Id
       email
       id
-      clients { id }
-      enabledProjects { id }
-      enabledWebsites { id }
+      clients { id ${full ? 'projects { id } websites { id }' : ''} }
       owns { id }
-      roles { id }
       superuser
     }`;
 
@@ -293,10 +508,7 @@ export class UserResolver {
       email: string;
       id: string;
       clients: any[];
-      enabledProjects: any[];
-      enabledWebsites: any[];
       owns: any[];
-      roles: any[];
       superuser: boolean;
     }
 
@@ -307,11 +519,21 @@ export class UserResolver {
 
     // Transform objects with ids into ids
     const mapFce = (obj: { id: string }) => obj.id;
-    user.clients = user.clients.map(mapFce);
-    user.enabledProjects = user.enabledProjects.map(mapFce);
-    user.enabledWebsites = user.enabledWebsites.map(mapFce);
     user.owns = user.owns.map(mapFce);
-    user.roles = user.roles.map(mapFce);
+
+    if (full) {
+      let projects = [] as string[];
+      let websites = [] as string[];
+
+      user.clients.forEach((client) => {
+        projects = [...projects, ...client.projects.map(mapFce)];
+        websites = [...websites, ...client.websites.map(mapFce)];
+      });
+
+      (user as IActingUserInfo).projects = projects;
+      (user as IActingUserInfo).websites = websites;
+    }
+    user.clients = user.clients.map(mapFce);
 
     return Promise.resolve(user);
   }
