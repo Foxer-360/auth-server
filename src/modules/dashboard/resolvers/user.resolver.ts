@@ -105,11 +105,26 @@ export class UserResolver {
       id_in: userIds,
     };
 
-    return this.prisma.query.users({ ...args, where }, info);
+    let finalUsers = await this.prisma.query.users({ ...args, where }, info) as User[];
+    if (!finalUsers) {
+      return Promise.resolve([]);
+    }
+
+    if (!actingUser.superuser) {
+      finalUsers = finalUsers.map((usr) => {
+        if (usr.auth0Id) {
+          usr.auth0Id = 'You have no permission to read this property';
+        }
+
+        return usr;
+      });
+    }
+
+    return finalUsers;
   }
 
   @Mutation('createUser')
-  public async createUser(root: any, args: any, ctx: any, info: any): Promise<any | null> {
+  public async createUser(root: any, args: any, ctx: any, info: any): Promise<User | null> {
     // If user with given email exists, do not create
 
     // If user with given email exists, but empty auth0Id, obtain auth0Id by
@@ -129,10 +144,96 @@ export class UserResolver {
   }
 
   @Mutation('updateUser')
-  public async updateUser(root: any, args: any, ctx: any, info: any): Promise<any | null> {
+  public async updateUser(root: any, args: any, ctx: any, info: any): Promise<User | null> {
     return Promise.resolve(null);
   }
 
+  @Mutation('deleteUser')
+  public async deleteUser(root: any, args: any, ctx: any, info: any): Promise<User | null> {
+    const actingUser = await this.getActingUserInfo(ctx);
+    if (!actingUser) {
+      return Promise.resolve(null);
+    }
+
+    // Get user which will be deleted from DB
+    const { where } = args;
+    if (!where) {
+      // Empty where, we cannot find the user
+      return Promise.resolve(null);
+    }
+    if (where.accessToken && where.accessToken.length >= 1) {
+      const auth0Id = this.getAuth0IdFromAccessToken(args.where.accessToken);
+      if (!auth0Id) {
+        // No user can be found for invalid auth0Id from given access token
+        return Promise.resolve(null);
+      }
+      where.auth0Id = auth0Id;
+      delete where.accessToken;
+    }
+
+    const prismaInfo = `{ id email clients { id } superuser }`;
+    const user = await this.prisma.query.users({ where }, prismaInfo) as User;
+    if (!user) {
+      return Promise.resolve(null);
+    }
+
+    const deleteProcess = async (): Promise<User | null> => {
+      const deleted = await this.prisma.mutation.deleteUser({ where: { id: user.id } }, info);
+      if (!deleted) {
+        return Promise.resolve(null);
+      }
+
+      // Delete also in Auth0
+      await this.auth0Service.deleteUserByEmail(user.email);
+
+      return deleted;
+    };
+
+    if (actingUser.superuser) {
+      // Superuser cannot delete itself
+      if (actingUser.id === user.id) {
+        return Promise.resolve(null);
+      }
+
+      // Otherwise no problema to delete
+      return deleteProcess();
+    }
+
+    // Check if we can delete this user
+    if (user.superuser) {
+      return Promise.resolve(null);
+    }
+
+    if (actingUser.id === user.id) {
+      return deleteProcess();
+    }
+
+    if (!user.clients || user.clients.length < 1) {
+      return deleteProcess();
+    }
+
+    // Acting user has to be owner of all users clients
+    let canBeDeleted = true;
+    user.clients.forEach(({ id }) => {
+      if (!actingUser.owns.includes(id)) {
+        canBeDeleted = false;
+      }
+    });
+
+    if (!canBeDeleted) {
+      return Promise.resolve(null);
+    }
+
+    return deleteProcess();
+  }
+
+  /**
+   * Simple checker which checks if acting user can see given user. This checker is used to filter
+   * users in queries.
+   *
+   * @param {IActingUserInfo} actingUser user who performs queries
+   * @param {ISimpleUserInfo} user
+   */
   private canActingUserSeeUser(actingUser: IActingUserInfo, user: ISimpleUserInfo): boolean {
     if (actingUser.superuser) {
       return true;
