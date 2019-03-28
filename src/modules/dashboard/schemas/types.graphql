@@ -1,6 +1,90 @@
-type User {
+# These types are copied from database model definition
+
+type Action {
   id: ID!
-  name: String
-  email: String
-  auth0Id: ID
+  name: String!
+  description: String
+}
+
+type Client {
+  # Basic informations
+  id: ID!
+  name: String!
+
+  # Relations
+  projects: [Project!]!
+  roles: [Role!]!
+  websites: [Website!]!
+  owners: [User!]!
+
+  # Configuration of client
+  secret: String
+}
+
+type Role {
+  # Basic information
+  id: ID!
+  name: String!
+
+  # Relations
+  actions: [Action!]!
+  client: Client!
+}
+
+type Project {
+  # Basic informations
+  foxer360Id: ID!
+  id: ID!
+  name: String!
+
+  # Relations
+  client: Client!
+  websites: [Website!]!
+}
+
+type Website {
+  # Basic informations
+  foxer360Id: ID!
+  id: ID!
+  name: String!
+
+  # Relations
+  client: Client!
+  project: Project!
+}
+
+type User {
+  # Basic informations
+  auth0Id: ID!
+  avatar: String
+  email: String!
+  id: ID!
+  name: String!
+
+  # Relations
+  clients: [Client!]!
+  enabledProjects: [Project!]!
+  enabledWebsites: [Website!]!
+  owns: [Client!]!
+  roles: [Role!]!
+  projectRoles: [UserProjectRoles!]!
+  websiteRoles: [UserWebsiteRoles!]!
+
+  # Configuration
+  superuser: Boolean!
+}
+
+type UserProjectRoles {
+  user: User!
+  client: Client!
+  project: Project!
+  roles: [Role!]!
+}
+
+type UserWebsiteRoles {
+  user: User!
+  client: Client!
+  project: Project!
+  website: Website!
+  roles: [Role!]!
 }
