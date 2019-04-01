@@ -314,7 +314,132 @@ export class UserResolver {
 
   @Mutation('updateUser')
   public async updateUser(root: any, args: any, ctx: any, info: any): Promise<User | null> {
-    return Promise.resolve(null);
+    const actingUser = await this.getActingUserInfo(ctx, true);
+    if (!actingUser) {
+      return Promise.resolve(null);
+    }
+
+    const { where } = args;
+    if (!where) {
+      // Empty where, we cannot find the user
+      return Promise.resolve(null);
+    }
+    if (where.accessToken && where.accessToken.length >= 1) {
+      const auth0Id = this.getAuth0IdFromAccessToken(args.where.accessToken);
+      if (!auth0Id) {
+        // No user can be found for invalid auth0Id from given access token
+        return Promise.resolve(null);
+      }
+      where.auth0Id = auth0Id;
+      delete where.accessToken;
+    }
+
+    // Just call getUsers to obtain users
+    const prismaInfo = `{ id auth0Id clients { id } enabledProjects { id } enabledWebsites { id } owns { id } superuser }`;
+    const users = await this.getUsers(root, { where }, ctx, prismaInfo);
+    if (!users || users.length < 1) {
+      return Promise.resolve(null);
+    }
+
+    const user = users[0] as User;
+    if (!user) {
+      return Promise.resolve(null);
+    }
+
+    const { data } = args;
+    if (!data) {
+      return Promise.resolve(null);
+    }
+
+    // These properties cannot be changed
+    if (data.id) {
+      delete data.id;
+    }
+    if (data.email) {
+      delete data.email;
+    }
+    if (data.auth0Id) {
+      delete data.auth0Id;
+    }
+
+    // Transform data id's into object with connect and disconnect
+    const transformFunction = (name: string) => {
+      if (!user[name]) {
+        user[name] = [];
+      }
+      const transformed = this.getIdDiffs(user[name].map(({ id }: { id: string }) => id), data[name]);
+      data[name] = {
+        connect: transformed.add.map((id) => ({ id })),
+        disconnect: transformed.delete.map((id) => ({ id })),
+      };
+    };
+    if (data.clients) {
+      transformFunction('clients');
+    }
+    if (data.enabledProjects) {
+      transformFunction('enabledProjects');
+    }
+    if (data.enabledWebsites) {
+      transformFunction('enabledWebsites');
+    }
+    if (data.owns) {
+      transformFunction('owns');
+    }
+
+    if (actingUser.superuser) {
+      // Superuser can anything...
+      return this.prisma.mutation.updateUser({ where: { id: user.id }, data }, info);
+    }
+
+    if (user.superuser) {
+      // Not superuser, so cannot change superuser user
+      return Promise.resolve(null);
+    }
+
+    // Not superuser, so cannot change superuser flag
+    if (data.superuser) {
+      data.superuser = false;
+    }
+
+    // Filter ids by privilegies
+    const filterFce = (name: string) => {
+      let filter = [] as string[];
+      switch (name) {
+        case 'enabledProjects':
+          filter = actingUser.projects || [] as string[];
+          break;
+        case 'enabledWebsites':
+          filter = actingUser.websites || [] as string[];
+          break;
+        default:
+          filter = actingUser[name] || [] as string[];
+          break;
+      }
+
+      data[name].connect = this.getIdsIntersection(data[name].connect.map(({ id }: { id: string }) => id), filter)
+        .map((id) => ({ id }));
+      data[name].disconnect = this.getIdsIntersection(data[name].disconnect.map(({ id }: { id: string }) => id), filter)
+        .map((id) => ({ id }));
+    };
+    if (data.clients) {
+      filterFce('clients');
+    }
+    if (data.enabledProjects) {
+      filterFce('enabledProjects');
+    }
+    if (data.enabledWebsites) {
+      filterFce('enabledWebsites');
+    }
+    if (data.owns) {
+      filterFce('owns');
+    }
+
+    const updatedUser = await this.prisma.mutation.updateUser({ where: { id: user.id }, data }, info);
+    if (updatedUser && updatedUser.auth0Id) {
+      updatedUser.auth0Id = 'You have no permission to read this property';
+    }
+
+    return updatedUser;
   }
 
   @Mutation('deleteUser')
@@ -433,22 +558,22 @@ export class UserResolver {
    * @param {string[]} updated
    * @return {{ add: string[], delete: string[] }}
    */
-  // private getIdDiffs(original: string[], updated: string[]): { add: string[], delete: string[] } {
-  //   const res = { add: [], delete: [] } as { add: string[], delete: string[] };
+  private getIdDiffs(original: string[], updated: string[]): { add: string[], delete: string[] } {
+    const res = { add: [], delete: [] } as { add: string[], delete: string[] };
 
-  //   original.forEach((oId) => {
-  //     if (!updated.includes(oId)) {
-  //       res.delete.push(oId);
-  //     }
-  //   });
-  //   updated.forEach((uId) => {
-  //     if (!original.includes(uId)) {
-  //       res.add.push(uId);
-  //     }
-  //   });
+    original.forEach((oId) => {
+      if (!updated.includes(oId)) {
+        res.delete.push(oId);
+      }
+    });
+    updated.forEach((uId) => {
+      if (!original.includes(uId)) {
+        res.add.push(uId);
+      }
+    });
 
-  //   return res;
-  // }
+    return res;
+  }
 
   /**
    * Simple helper which return intersection of two arrays of strings (ids)
