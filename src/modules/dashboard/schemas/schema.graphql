@@ -53,6 +53,24 @@ input ClientWhereInput {
   secret_not_ends_with: String
 }
 
+input ClientCreateInput {
+  name: String!
+  owners: [ID!]
+  projects: [ID!]
+  roles: [ID!]
+  secret: String
+  websites: [ID!]
+}
+
+input ClientUpdateInput {
+  name: String
+  owners: [ID!]
+  projects: [ID!]
+  roles: [ID!]
+  secret: String
+  websites: [ID!]
+}
+
 input UserWhereUniqueInput {
   accessToken: String
   auth0Id: ID
@@ -172,8 +190,13 @@ input UserUpdateInput {
 
 # Define all mutations
 type Mutation {
+  createClient(data: ClientCreateInput): Client
   createUser(data: UserCreateInput): User
+
+  deleteClient(where: ClientWhereUniqueInput): Client
   deleteUser(where: UserWhereUniqueInput): User
+
+  updateClient(data: ClientUpdateInput, where: ClientWhereUniqueInput): Client
   updateUser(data: UserUpdateInput, where: UserWhereUniqueInput): User
 }
 
