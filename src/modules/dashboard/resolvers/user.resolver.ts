@@ -266,40 +266,25 @@ export class UserResolver {
       }
     }
     delete args.data.password;
-    if (args.data.clients) {
-      args.data.clients = {
-        connect: {
-          id: args.data.clients
-        }
+    const transformFce = (name: string) => {
+      args.data[name] = {
+        connect: args.data[name].map((id: string) => ({ id })),
       };
+    };
+    if (args.data.clients) {
+      transformFce('clients');
     }
     if (args.data.owns) {
-      args.data.owns = {
-        connect: {
-          id: args.data.owns
-        }
-      };
+      transformFce('owns');
     }
     if (args.data.enabledProjects) {
-      args.data.enabledProjects = {
-        connect: {
-          id: args.data.enabledProjects
-        }
-      };
+      transformFce('enabledProjects');
     }
     if (args.data.enabledWebsites) {
-      args.data.enabledWebsites = {
-        connect: {
-          id: args.data.enabledWebsites
-        }
-      };
+      transformFce('enabledWebsites');
     }
     if (args.data.roles) {
-      args.data.roles = {
-        connect: {
-          id: args.data.roles
-        }
-      };
+      transformFce('roles');
     }
 
     const createdUser = await this.prisma.mutation.createUser({ data: { ...args.data, auth0Id } }, info);
@@ -466,19 +451,20 @@ export class UserResolver {
     }
 
     const prismaInfo = `{ id email clients { id } superuser }`;
-    const user = await this.prisma.query.users({ where }, prismaInfo) as User;
-    if (!user) {
+    let user = await this.prisma.query.users({ where }, prismaInfo) as User;
+    if (!user || !user[0]) {
       return Promise.resolve(null);
     }
+    user = user[0];
 
-    const deleteProcess = async (): Promise<User | null> => {
-      const deleted = await this.prisma.mutation.deleteUser({ where: { id: user.id } }, info);
+    const deleteProcess = async (id: string, email: string): Promise<User | null> => {
+      const deleted = await this.prisma.mutation.deleteUser({ where: { id } }, info);
       if (!deleted) {
         return Promise.resolve(null);
       }
 
       // Delete also in Auth0
-      await this.auth0Service.deleteUserByEmail(user.email);
+      await this.auth0Service.deleteUserByEmail(email);
 
       return deleted;
     };
@@ -490,7 +476,7 @@ export class UserResolver {
       }
 
       // Otherwise no problema to delete
-      return deleteProcess();
+      return deleteProcess(user.id, user.email);
     }
 
     // Check if we can delete this user
@@ -499,11 +485,11 @@ export class UserResolver {
     }
 
     if (actingUser.id === user.id) {
-      return deleteProcess();
+      return deleteProcess(user.id, user.email);
     }
 
     if (!user.clients || user.clients.length < 1) {
-      return deleteProcess();
+      return deleteProcess(user.id, user.email);
     }
 
     // Acting user has to be owner of all users clients
@@ -518,7 +504,7 @@ export class UserResolver {
       return Promise.resolve(null);
     }
 
-    return deleteProcess();
+    return deleteProcess(user.id, user.email);
   }
 
   /**
