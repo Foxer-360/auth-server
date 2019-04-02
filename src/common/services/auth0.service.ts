@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import * as jwt from 'jsonwebtoken';
 
 import { loadEnvConfig, readEnvironmentVariable } from '@source/utils';
 
@@ -277,6 +278,27 @@ export class Auth0Service {
     }
 
     return match[1];
+  }
+
+  /**
+   * Simple helper that decode auth0 ID from given access token
+   *
+   * @param {string} token a valid access token
+   * @return {string | null}
+   */
+  public getAuth0IdFromAccessToken(token: string): string | null {
+    const decoded = jwt.decode(token);
+
+    if (!decoded || !decoded.sub) {
+      return null;
+    }
+
+    const auth0Id = this.getUserId(decoded.sub);
+    if (!auth0Id) {
+      return null;
+    }
+
+    return auth0Id;
   }
 
   /**
