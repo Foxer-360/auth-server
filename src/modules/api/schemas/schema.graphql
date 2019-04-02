@@ -27,7 +27,7 @@ input ProjectWhereUniqueInput {
 input WebsiteCreateInput {
   foxer360Id: ID!
   name: String!
-  project: ID!
+  project: ID! # It's a foxer360 id !!!
 }
 
 input WebsiteUpdateInput {
