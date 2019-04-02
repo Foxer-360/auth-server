@@ -1,3 +1,64 @@
+input ClientIdentity {
+  id: ID!
+}
+
+input ClientAccessIdentity {
+  id: ID!
+  secret: String!
+}
+
+input UserIdentity {
+  accessToken: String!
+}
+
+input ProjectCreateInput {
+  foxer360Id: ID!
+  name: String!
+}
+
+input ProjectUpdateInput {
+  name: String
+}
+
+input ProjectWhereUniqueInput {
+  foxer360Id: ID!
+}
+
+input WebsiteCreateInput {
+  foxer360Id: ID!
+  name: String!
+  project: ID!
+}
+
+input WebsiteUpdateInput {
+  name: String
+}
+
+input WebsiteWhereUniqueInput {
+  foxer360Id: ID!
+}
+
+
 type Query {
-  client: Client
+  # Get all projects saved in Foxer360 Auth for given client
+  projects(client: ClientAccessIdentity!): [Project]!
+  # Get all websites saved in Foxer360 Auth for given client
+  websites(client: ClientAccessIdentity!): [Website]!
+
+  # Queries to check user access
+  exists(client: ClientIdentity!, user: UserIdentity): Boolean!
+  owns(client: ClientIdentity!, user: UserIdentity): Boolean!
+  enabledProjects(client: ClientIdentity!, user: UserIdentity!): [Project]!
+  enabledWebsites(client: ClientIdentity!, user: UserIdentity!): [Website]!
+}
+
+
+type Mutation {
+  createProject(client: ClientAccessIdentity!, data: ProjectCreateInput!): Project
+  updateProject(client: ClientAccessIdentity!, data: ProjectUpdateInput!, where: ProjectWhereUniqueInput!): Project
+  deleteProject(client: ClientAccessIdentity!, where: ProjectWhereUniqueInput!): Project
+
+  createWebsite(client: ClientAccessIdentity!, data: WebsiteCreateInput!): Website
+  updateWebsite(client: ClientAccessIdentity!, data: WebsiteUpdateInput!, where: WebsiteWhereUniqueInput!): Website
+  deleteWebsite(client: ClientAccessIdentity!, where: WebsiteWhereUniqueInput!): Website
 }

@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
 
 import { prismaProvider } from '@source/common/providers/prisma.provider';
-import { ClientResolver } from './resolvers/client.resolver';
+import { ProjectResolver } from './resolvers/project.resolver';
+import { WebsiteResolver } from './resolvers/website.resolver';
 
 
 const resolvers = [
-  ClientResolver,
+  ProjectResolver,
+  WebsiteResolver,
 ];
 
 @Module({

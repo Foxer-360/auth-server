@@ -1,4 +1,23 @@
 type Client {
   id: ID!
-  name: String
+  name: String!
+
+  projects: [Project!]!
+  websites: [Website!]!
+}
+
+type Project {
+  id: ID!
+  foxer360Id: ID!
+  name: String!
+
+  websites: [Website!]!
+}
+
+type Website {
+  id: ID!
+  foxer360Id: ID!
+  name: String!
+
+  project: Project!
 }
