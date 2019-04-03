@@ -84,6 +84,11 @@ export interface IEnabledWebsitesArgs {
   user: IUserIdentity;
 }
 
+export interface IOwnsArgs {
+   client: IClientIdentity;
+   user: IUserIdentity;
+}
+
 // Arguments definition for all mutations
 export interface ICreateProjectArgs {
   client: IClientAccessIdentity;
