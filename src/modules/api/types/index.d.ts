@@ -85,8 +85,13 @@ export interface IEnabledWebsitesArgs {
 }
 
 export interface IOwnsArgs {
-   client: IClientIdentity;
-   user: IUserIdentity;
+  client: IClientIdentity;
+  user: IUserIdentity;
+}
+
+export interface IExistsArgs {
+  client: IClientIdentity;
+  user: IUserIdentity;
 }
 
 // Arguments definition for all mutations
