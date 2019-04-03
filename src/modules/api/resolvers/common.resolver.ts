@@ -14,6 +14,26 @@ export class CommonResolver {
   @Mutation('syncProjectsWebsites')
   @UseGuards(ClientGuard)
   public async syncProjectsWebsites(root: any, args: ISyncProjectsWebsitesArgs, ctx: any, info: any): Promise<boolean> {
+    // Get all projects and websites, they will be matched with given projects
+    // and websites and those which are not in given arrays will be removed
+    const clientWhere = { where: { client: { id: args.client.id } } };
+    const projects = await (async () => {
+      const result = await this.prisma.query.projects(clientWhere, `{ id }`) as Project[];
+      if (!result || result.length < 1) {
+        return [];
+      }
+
+      return result.map((p) => p.id);
+    })();
+    const websites = await (async () => {
+      const result = await this.prisma.query.websites(clientWhere, `{ id }`) as Website[];
+      if (!result || result.length < 1) {
+        return [];
+      }
+
+      return result.map((w) => w.id);
+    })();
+
     // Simple map foxer360Id => id for projects to optimize website checking phase
     const projectIdsMap = {} as { [foxer360Id: string]: string };
 
@@ -39,10 +59,14 @@ export class CommonResolver {
           return Promise.resolve();
         }
 
+        projects.splice(projects.indexOf(created.id), 1);
+
         // Save into foxer360Id => id map
         projectIdsMap[project.foxer360Id] = created.id;
         return Promise.resolve();
       }
+
+      projects.splice(projects.indexOf(found[0].id), 1);
 
       // Save into foxer360Id => id map
       projectIdsMap[project.foxer360Id] = found[0].id;
@@ -79,9 +103,16 @@ export class CommonResolver {
           },
         };
 
-        await this.prisma.mutation.createWebsite({ data }, `{ id }`);
+        const created = await this.prisma.mutation.createWebsite({ data }, `{ id }`);
+        if (!created) {
+          return Promise.resolve();
+        }
+
+        websites.splice(websites.indexOf(created.id), 1);
         return Promise.resolve();
       }
+
+      websites.splice(websites.indexOf(found[0].id), 1);
 
       // Check if name is same
       if (website.name !== found[0].name) {
@@ -90,6 +121,10 @@ export class CommonResolver {
         await this.prisma.mutation.updateWebsite({ where: { id: found[0].id }, data }, `{ id }`);
       }
     });
+
+    // Remove projects and websites which are in our DB, but not in Foxer360 DB
+    await this.prisma.mutation.deleteManyWebsites({ where: { id_in: websites } }, `{ count }`);
+    await this.prisma.mutation.deleteManyProjects({ where: { id_in: projects } }, `{ count }`);
 
     return Promise.resolve(true);
   }
