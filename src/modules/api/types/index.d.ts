@@ -62,6 +62,11 @@ export interface IWebsiteWhereUniqueInput {
   foxer360Id: string;
 }
 
+export interface ISyncProjectsWebsitesInput {
+  projects: IProjectCreateInput[];
+  websites: IWebsiteCreateInput[];
+}
+
 // Arguments definition for all queries
 export interface IProjectsArgs {
   client: IClientAccessIdentity;
@@ -106,4 +111,9 @@ export interface IUpdateWebsiteArgs {
 export interface IDeleteWebsiteArgs {
   client: IClientAccessIdentity;
   where: IWebsiteWhereUniqueInput;
+}
+
+export interface ISyncProjectsWebsitesArgs {
+  client: IClientAccessIdentity;
+  data: ISyncProjectsWebsitesInput;
 }

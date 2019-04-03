@@ -38,6 +38,10 @@ input WebsiteWhereUniqueInput {
   foxer360Id: ID!
 }
 
+input SyncProjectsWebsitesInput {
+  projects: [ProjectCreateInput]!
+  websites: [WebsiteCreateInput]!
+}
 
 type Query {
   # Get all projects saved in Foxer360 Auth for given client
@@ -61,4 +65,6 @@ type Mutation {
   createWebsite(client: ClientAccessIdentity!, data: WebsiteCreateInput!): Website
   updateWebsite(client: ClientAccessIdentity!, data: WebsiteUpdateInput!, where: WebsiteWhereUniqueInput!): Website
   deleteWebsite(client: ClientAccessIdentity!, where: WebsiteWhereUniqueInput!): Website
+
+  syncProjectsWebsites(client: ClientAccessIdentity!, data: SyncProjectsWebsitesInput!): Boolean!
 }
