@@ -1,6 +1,6 @@
 {
   "name": "@foxer360/auth-server",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Authorization server for the Foxer360 system.",
   "main": "src/index.ts",
   "repository": "git@github.com:Foxer-360/auth-server.git",

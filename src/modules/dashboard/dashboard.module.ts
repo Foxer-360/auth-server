@@ -13,7 +13,7 @@ const schemas = [
 const GraphQLDefinition = GraphQLModule.forRoot({
   context: ({ req }) => ({ headers: req.headers }),
   include: [DashboardGraphQLModule],
-  installSubscriptionHandlers: true,
+  installSubscriptionHandlers: false,
   path: '/dashboard',
   playground: true,
   // To disable warning in console because of Prisma's Node type
