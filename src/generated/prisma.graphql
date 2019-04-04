@@ -1,5 +1,5 @@
 # source: http://localhost:4467
-# timestamp: Tue Mar 26 2019 15:55:43 GMT+0100 (Central European Standard Time)
+# timestamp: Thu Apr 04 2019 20:10:28 GMT+0200 (Central European Summer Time)
 
 type Action implements Node {
   id: ID!
@@ -18,7 +18,6 @@ type ActionConnection {
 }
 
 input ActionCreateInput {
-  id: ID
   name: String!
   description: String
 }
@@ -468,7 +467,6 @@ type ClientConnection {
 }
 
 input ClientCreateInput {
-  id: ID
   name: String!
   secret: String
   projects: ProjectCreateManyWithoutClientInput
@@ -508,7 +506,6 @@ input ClientCreateOneWithoutWebsitesInput {
 }
 
 input ClientCreateWithoutOwnersInput {
-  id: ID
   name: String!
   secret: String
   projects: ProjectCreateManyWithoutClientInput
@@ -517,7 +514,6 @@ input ClientCreateWithoutOwnersInput {
 }
 
 input ClientCreateWithoutProjectsInput {
-  id: ID
   name: String!
   secret: String
   roles: RoleCreateManyWithoutClientInput
@@ -526,7 +522,6 @@ input ClientCreateWithoutProjectsInput {
 }
 
 input ClientCreateWithoutRolesInput {
-  id: ID
   name: String!
   secret: String
   projects: ProjectCreateManyWithoutClientInput
@@ -535,7 +530,6 @@ input ClientCreateWithoutRolesInput {
 }
 
 input ClientCreateWithoutWebsitesInput {
-  id: ID
   name: String!
   secret: String
   projects: ProjectCreateManyWithoutClientInput
@@ -1132,7 +1126,6 @@ type ProjectConnection {
 
 input ProjectCreateInput {
   foxer360Id: ID!
-  id: ID
   name: String!
   client: ClientCreateOneWithoutProjectsInput!
   websites: WebsiteCreateManyWithoutProjectInput
@@ -1160,14 +1153,12 @@ input ProjectCreateOneWithoutWebsitesInput {
 
 input ProjectCreateWithoutClientInput {
   foxer360Id: ID!
-  id: ID
   name: String!
   websites: WebsiteCreateManyWithoutProjectInput
 }
 
 input ProjectCreateWithoutWebsitesInput {
   foxer360Id: ID!
-  id: ID
   name: String!
   client: ClientCreateOneWithoutProjectsInput!
 }
@@ -1658,7 +1649,6 @@ type RoleConnection {
 }
 
 input RoleCreateInput {
-  id: ID
   name: String!
   actions: ActionCreateManyInput
   client: ClientCreateOneWithoutRolesInput!
@@ -1675,7 +1665,6 @@ input RoleCreateManyWithoutClientInput {
 }
 
 input RoleCreateWithoutClientInput {
-  id: ID
   name: String!
   actions: ActionCreateManyInput
 }
@@ -2051,7 +2040,6 @@ input UserCreateInput {
   auth0Id: ID!
   avatar: String
   email: String!
-  id: ID
   name: String!
   superuser: Boolean
   clients: ClientCreateManyInput
@@ -2082,7 +2070,6 @@ input UserCreateWithoutOwnsInput {
   auth0Id: ID!
   avatar: String
   email: String!
-  id: ID
   name: String!
   superuser: Boolean
   clients: ClientCreateManyInput
@@ -2097,7 +2084,6 @@ input UserCreateWithoutProjectRolesInput {
   auth0Id: ID!
   avatar: String
   email: String!
-  id: ID
   name: String!
   superuser: Boolean
   clients: ClientCreateManyInput
@@ -2112,7 +2098,6 @@ input UserCreateWithoutWebsiteRolesInput {
   auth0Id: ID!
   avatar: String
   email: String!
-  id: ID
   name: String!
   superuser: Boolean
   clients: ClientCreateManyInput
@@ -2974,7 +2959,6 @@ type WebsiteConnection {
 
 input WebsiteCreateInput {
   foxer360Id: ID!
-  id: ID
   name: String!
   client: ClientCreateOneWithoutWebsitesInput!
   project: ProjectCreateOneWithoutWebsitesInput!
@@ -3002,14 +2986,12 @@ input WebsiteCreateOneInput {
 
 input WebsiteCreateWithoutClientInput {
   foxer360Id: ID!
-  id: ID
   name: String!
   project: ProjectCreateOneWithoutWebsitesInput!
 }
 
 input WebsiteCreateWithoutProjectInput {
   foxer360Id: ID!
-  id: ID
   name: String!
   client: ClientCreateOneWithoutWebsitesInput!
 }

@@ -1,6 +1,6 @@
 {
   "name": "@foxer360/auth-server",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Authorization server for the Foxer360 system.",
   "main": "src/index.ts",
   "repository": "git@github.com:Foxer-360/auth-server.git",
@@ -22,13 +22,12 @@
     "@nestjs/core": "^5.7.3",
     "@nestjs/graphql": "^5.5.4",
     "apollo-server-express": "^2.4.6",
-    "cors": "^2.8.5",
     "dotenv": "^6.2.0",
     "graphql": "^14.1.1",
     "graphql-tools": "^4.0.4",
     "jsonwebtoken": "^8.5.1",
     "jwks-rsa": "^1.4.0",
-    "prisma": "1.30",
+    "prisma": "1.29",
     "prisma-binding": "^2.3.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.4.0"

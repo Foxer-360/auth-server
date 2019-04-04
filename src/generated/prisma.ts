@@ -133,7 +133,6 @@ type ActionConnection {
 }
 
 input ActionCreateInput {
-  id: ID
   name: String!
   description: String
 }
@@ -583,7 +582,6 @@ type ClientConnection {
 }
 
 input ClientCreateInput {
-  id: ID
   name: String!
   secret: String
   projects: ProjectCreateManyWithoutClientInput
@@ -623,7 +621,6 @@ input ClientCreateOneWithoutWebsitesInput {
 }
 
 input ClientCreateWithoutOwnersInput {
-  id: ID
   name: String!
   secret: String
   projects: ProjectCreateManyWithoutClientInput
@@ -632,7 +629,6 @@ input ClientCreateWithoutOwnersInput {
 }
 
 input ClientCreateWithoutProjectsInput {
-  id: ID
   name: String!
   secret: String
   roles: RoleCreateManyWithoutClientInput
@@ -641,7 +637,6 @@ input ClientCreateWithoutProjectsInput {
 }
 
 input ClientCreateWithoutRolesInput {
-  id: ID
   name: String!
   secret: String
   projects: ProjectCreateManyWithoutClientInput
@@ -650,7 +645,6 @@ input ClientCreateWithoutRolesInput {
 }
 
 input ClientCreateWithoutWebsitesInput {
-  id: ID
   name: String!
   secret: String
   projects: ProjectCreateManyWithoutClientInput
@@ -1247,7 +1241,6 @@ type ProjectConnection {
 
 input ProjectCreateInput {
   foxer360Id: ID!
-  id: ID
   name: String!
   client: ClientCreateOneWithoutProjectsInput!
   websites: WebsiteCreateManyWithoutProjectInput
@@ -1275,14 +1268,12 @@ input ProjectCreateOneWithoutWebsitesInput {
 
 input ProjectCreateWithoutClientInput {
   foxer360Id: ID!
-  id: ID
   name: String!
   websites: WebsiteCreateManyWithoutProjectInput
 }
 
 input ProjectCreateWithoutWebsitesInput {
   foxer360Id: ID!
-  id: ID
   name: String!
   client: ClientCreateOneWithoutProjectsInput!
 }
@@ -1773,7 +1764,6 @@ type RoleConnection {
 }
 
 input RoleCreateInput {
-  id: ID
   name: String!
   actions: ActionCreateManyInput
   client: ClientCreateOneWithoutRolesInput!
@@ -1790,7 +1780,6 @@ input RoleCreateManyWithoutClientInput {
 }
 
 input RoleCreateWithoutClientInput {
-  id: ID
   name: String!
   actions: ActionCreateManyInput
 }
@@ -2166,7 +2155,6 @@ input UserCreateInput {
   auth0Id: ID!
   avatar: String
   email: String!
-  id: ID
   name: String!
   superuser: Boolean
   clients: ClientCreateManyInput
@@ -2197,7 +2185,6 @@ input UserCreateWithoutOwnsInput {
   auth0Id: ID!
   avatar: String
   email: String!
-  id: ID
   name: String!
   superuser: Boolean
   clients: ClientCreateManyInput
@@ -2212,7 +2199,6 @@ input UserCreateWithoutProjectRolesInput {
   auth0Id: ID!
   avatar: String
   email: String!
-  id: ID
   name: String!
   superuser: Boolean
   clients: ClientCreateManyInput
@@ -2227,7 +2213,6 @@ input UserCreateWithoutWebsiteRolesInput {
   auth0Id: ID!
   avatar: String
   email: String!
-  id: ID
   name: String!
   superuser: Boolean
   clients: ClientCreateManyInput
@@ -3089,7 +3074,6 @@ type WebsiteConnection {
 
 input WebsiteCreateInput {
   foxer360Id: ID!
-  id: ID
   name: String!
   client: ClientCreateOneWithoutWebsitesInput!
   project: ProjectCreateOneWithoutWebsitesInput!
@@ -3117,14 +3101,12 @@ input WebsiteCreateOneInput {
 
 input WebsiteCreateWithoutClientInput {
   foxer360Id: ID!
-  id: ID
   name: String!
   project: ProjectCreateOneWithoutWebsitesInput!
 }
 
 input WebsiteCreateWithoutProjectInput {
   foxer360Id: ID!
-  id: ID
   name: String!
   client: ClientCreateOneWithoutWebsitesInput!
 }
@@ -3671,7 +3653,6 @@ export type WebsiteOrderByInput =   'foxer360Id_ASC' |
   'createdAt_DESC'
 
 export interface ActionCreateInput {
-  id?: ID_Input | null
   name: String
   description?: String | null
 }
@@ -3842,7 +3823,6 @@ export interface ActionWhereUniqueInput {
 }
 
 export interface ClientCreateInput {
-  id?: ID_Input | null
   name: String
   secret?: String | null
   projects?: ProjectCreateManyWithoutClientInput | null
@@ -3882,7 +3862,6 @@ export interface ClientCreateOneWithoutWebsitesInput {
 }
 
 export interface ClientCreateWithoutOwnersInput {
-  id?: ID_Input | null
   name: String
   secret?: String | null
   projects?: ProjectCreateManyWithoutClientInput | null
@@ -3891,7 +3870,6 @@ export interface ClientCreateWithoutOwnersInput {
 }
 
 export interface ClientCreateWithoutProjectsInput {
-  id?: ID_Input | null
   name: String
   secret?: String | null
   roles?: RoleCreateManyWithoutClientInput | null
@@ -3900,7 +3878,6 @@ export interface ClientCreateWithoutProjectsInput {
 }
 
 export interface ClientCreateWithoutRolesInput {
-  id?: ID_Input | null
   name: String
   secret?: String | null
   projects?: ProjectCreateManyWithoutClientInput | null
@@ -3909,7 +3886,6 @@ export interface ClientCreateWithoutRolesInput {
 }
 
 export interface ClientCreateWithoutWebsitesInput {
-  id?: ID_Input | null
   name: String
   secret?: String | null
   projects?: ProjectCreateManyWithoutClientInput | null
@@ -4190,7 +4166,6 @@ export interface ClientWhereUniqueInput {
 
 export interface ProjectCreateInput {
   foxer360Id: ID_Output
-  id?: ID_Input | null
   name: String
   client: ClientCreateOneWithoutProjectsInput
   websites?: WebsiteCreateManyWithoutProjectInput | null
@@ -4218,14 +4193,12 @@ export interface ProjectCreateOneWithoutWebsitesInput {
 
 export interface ProjectCreateWithoutClientInput {
   foxer360Id: ID_Output
-  id?: ID_Input | null
   name: String
   websites?: WebsiteCreateManyWithoutProjectInput | null
 }
 
 export interface ProjectCreateWithoutWebsitesInput {
   foxer360Id: ID_Output
-  id?: ID_Input | null
   name: String
   client: ClientCreateOneWithoutProjectsInput
 }
@@ -4446,7 +4419,6 @@ export interface ProjectWhereUniqueInput {
 }
 
 export interface RoleCreateInput {
-  id?: ID_Input | null
   name: String
   actions?: ActionCreateManyInput | null
   client: ClientCreateOneWithoutRolesInput
@@ -4463,7 +4435,6 @@ export interface RoleCreateManyWithoutClientInput {
 }
 
 export interface RoleCreateWithoutClientInput {
-  id?: ID_Input | null
   name: String
   actions?: ActionCreateManyInput | null
 }
@@ -4635,7 +4606,6 @@ export interface UserCreateInput {
   auth0Id: ID_Output
   avatar?: String | null
   email: String
-  id?: ID_Input | null
   name: String
   superuser?: Boolean | null
   clients?: ClientCreateManyInput | null
@@ -4666,7 +4636,6 @@ export interface UserCreateWithoutOwnsInput {
   auth0Id: ID_Output
   avatar?: String | null
   email: String
-  id?: ID_Input | null
   name: String
   superuser?: Boolean | null
   clients?: ClientCreateManyInput | null
@@ -4681,7 +4650,6 @@ export interface UserCreateWithoutProjectRolesInput {
   auth0Id: ID_Output
   avatar?: String | null
   email: String
-  id?: ID_Input | null
   name: String
   superuser?: Boolean | null
   clients?: ClientCreateManyInput | null
@@ -4696,7 +4664,6 @@ export interface UserCreateWithoutWebsiteRolesInput {
   auth0Id: ID_Output
   avatar?: String | null
   email: String
-  id?: ID_Input | null
   name: String
   superuser?: Boolean | null
   clients?: ClientCreateManyInput | null
@@ -5066,7 +5033,6 @@ export interface UserWhereUniqueInput {
 
 export interface WebsiteCreateInput {
   foxer360Id: ID_Output
-  id?: ID_Input | null
   name: String
   client: ClientCreateOneWithoutWebsitesInput
   project: ProjectCreateOneWithoutWebsitesInput
@@ -5094,14 +5060,12 @@ export interface WebsiteCreateOneInput {
 
 export interface WebsiteCreateWithoutClientInput {
   foxer360Id: ID_Output
-  id?: ID_Input | null
   name: String
   project: ProjectCreateOneWithoutWebsitesInput
 }
 
 export interface WebsiteCreateWithoutProjectInput {
   foxer360Id: ID_Output
-  id?: ID_Input | null
   name: String
   client: ClientCreateOneWithoutWebsitesInput
 }
