@@ -50,6 +50,7 @@ type Query {
   websites(client: ClientAccessIdentity!): [Website]!
 
   # Queries to check user access
+  profile(client: ClientIdentity, user: UserIdentity): User
   exists(client: ClientIdentity!, user: UserIdentity): Boolean!
   owns(client: ClientIdentity!, user: UserIdentity): Boolean!
   enabledProjects(client: ClientIdentity!, user: UserIdentity!): [Project]!

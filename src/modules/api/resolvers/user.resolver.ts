@@ -2,7 +2,7 @@ import { Query, Resolver } from '@nestjs/graphql';
 
 import { Auth0Service } from '@source/common/services/auth0.service';
 import { Prisma, User } from '@source/generated/prisma';
-import { IExistsArgs, IOwnsArgs } from '../types';
+import { IExistsArgs, IOwnsArgs, IProfileArgs, IUser } from '../types';
 
 
 @Resolver('user')
@@ -72,6 +72,55 @@ export class UserResolver {
     }
 
     return Promise.resolve(user.owns.includes(args.client.id));
+  }
+
+  @Query('profile')
+  public async profile(root: any, args: IProfileArgs, ctx: any, info: any): Promise<IUser | null> {
+    const auth0Id = this.auth0Service.getAuth0IdFromAccessToken(args.user.accessToken);
+    if (!auth0Id) {
+      return Promise.resolve(null);
+    }
+
+
+    // Get user profile
+    const user = await (async () => {
+      const users = await this.prisma.query.users({ where: { auth0Id } }, `{ avatar email id name clients { id } owns { id } superuser }`) as User[];
+      if (!users || !users[0] || !users[0].clients || !users[0].owns) {
+        return Promise.resolve(null);
+      }
+
+      const res = {
+        ...users[0],
+        clients: users[0].clients.map(({ id }) => id),
+        owns: users[0].owns.map(({ id }) => id),
+      };
+
+      return Promise.resolve(res);
+    })();
+
+    if (!user) {
+      return Promise.resolve(null);
+    }
+
+    if (!user.superuser && !user.clients.includes(args.client.id)) {
+      return Promise.resolve(null);
+    }
+
+    const result = {
+      auth0Id,
+      avatar: user.avatar,
+      email: user.email,
+      id: user.id,
+      name: user.name,
+
+      owner: false,
+    } as IUser;
+
+    if (user.superuser || user.owns.includes(args.client.id)) {
+      result.owner = true;
+    }
+
+    return Promise.resolve(result);
   }
 
 }

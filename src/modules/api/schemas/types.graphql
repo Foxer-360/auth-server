@@ -21,3 +21,14 @@ type Website {
 
   project: Project!
 }
+
+type User {
+  auth0Id: ID
+  avatar: String
+  email: String
+  id: ID
+  name: String
+
+  owner: Boolean
+  superuser: Boolean
+}

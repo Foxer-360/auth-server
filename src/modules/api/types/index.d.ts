@@ -22,6 +22,17 @@ export interface IWebsite {
   project: IProject;
 }
 
+export interface IUser {
+  auth0Id: string;
+  avatar: string;
+  email: string;
+  id: string;
+  name: string;
+
+  owner: boolean;
+  superuser: boolean;
+}
+
 export interface IClientIdentity {
   id: string;
 }
@@ -90,6 +101,11 @@ export interface IOwnsArgs {
 }
 
 export interface IExistsArgs {
+  client: IClientIdentity;
+  user: IUserIdentity;
+}
+
+export interface IProfileArgs {
   client: IClientIdentity;
   user: IUserIdentity;
 }
