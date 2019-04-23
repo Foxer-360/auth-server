@@ -110,6 +110,10 @@ export interface IProfileArgs {
   user: IUserIdentity;
 }
 
+export interface IUsersArgs {
+  client: IClientAccessIdentity;
+}
+
 // Arguments definition for all mutations
 export interface ICreateProjectArgs {
   client: IClientAccessIdentity;

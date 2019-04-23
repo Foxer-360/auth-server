@@ -2,7 +2,7 @@ import { Query, Resolver } from '@nestjs/graphql';
 
 import { Auth0Service } from '@source/common/services/auth0.service';
 import { Prisma, User } from '@source/generated/prisma';
-import { IExistsArgs, IOwnsArgs, IProfileArgs, IUser } from '../types';
+import { IExistsArgs, IOwnsArgs, IProfileArgs, IUser,IUsersArgs } from '../types';
 
 
 @Resolver('user')
@@ -121,6 +121,22 @@ export class UserResolver {
     }
 
     return Promise.resolve(result);
+  }
+
+  @Query('users')
+  public async users(root: any, args: IUsersArgs, ctx: any, info: any): Promise<IUser[]> {
+    const where = {
+      clients_some: {
+        id: args.client.id,
+        secret: args.client.secret,
+      },
+    };
+    const users = await this.prisma.query.users({ where }, info);
+    if (!users || users.length < 0) {
+      return Promise.resolve([]);
+    }
+
+    return Promise.resolve(users as IUser[]);
   }
 
 }

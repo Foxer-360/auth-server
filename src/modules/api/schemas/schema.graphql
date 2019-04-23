@@ -55,6 +55,9 @@ type Query {
   owns(client: ClientIdentity!, user: UserIdentity): Boolean!
   enabledProjects(client: ClientIdentity!, user: UserIdentity!): [Project]!
   enabledWebsites(client: ClientIdentity!, user: UserIdentity!): [Website]!
+
+  # Query to get all users in given client
+  users(client: ClientAccessIdentity): [User]!
 }
 
 
